@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="style.css">
-    <title>منصة الأستاذ التعليمية</title>
+    <title>MASAR-مَســـار</title>
 </head>
 <body class="home-page">
     <header>
@@ -21,27 +21,57 @@
                     <button class="icon-btn theme-switcher" data-theme="dark" aria-label="وضع الظلام">🌙</button>
                 </div>
             </div>
-            <nav class="header-actions">
-                <a href="login.html" class="btn-outline">تسجيل الدخول</a>
-                <a href="register.html" class="btn-fill">حساب جديد</a>
-            </nav>
+           <nav class="header-actions" id="authActions">
+    <!-- سيتم تبديل هذا المحتوى بواسطة JavaScript -->
+    <a href="login.html" class="btn-outline">تسجيل الدخول</a>
+    <a href="register.html" class="btn-fill">حساب جديد</a>
+</nav>
+
+<!-- إضافة قائمة المستخدم (تكون مخفية افتراضياً) -->
+<div class="user-dropdown-container" id="userDropdownArea" style="display: none;">
+    <button class="user-menu-btn" onclick="toggleUserMenu()">
+        <span id="navUserName">الطالب</span>
+        <div class="user-icon-circle">👤</div>
+    </button>
+    
+    <div class="user-dropdown-menu" id="userMenu">
+        <a href="profile.html" class="menu-item">👤 البروفايل</a>
+        <div class="menu-item balance-item">
+            <span>💰 الرصيد (النقط):</span>
+            <span id="userPoints">0</span> ج.م
+        </div>
+        <hr>
+        <button onclick="handleLogout()" class="menu-item logout-btn">🚪 تسجيل خروج</button>
+    </div>
+</div>
         </div>
     </header>
 
-    <div class="welcome-container">
-        <div class="welcome-3d-card">
-            <div class="card-inner">
-                <div class="card-front">
-                    <div class="welcome-text">
-                        <h2>أهلاً بك</h2>
-                        <h1 class="student-name">الطالب</h1>
-                    </div>
-                </div>
+ <section class="main-hero-area">
+    <div class="hero-banner">
+        <!-- محتوى النص -->
+        <div class="hero-text-box">
+            <div id="userGreeting" style="display: none;">
+                <h2 class="welcome-label">أهلاً بك</h2>
+                <h1 class="dynamic-name" id="userNamePlaceholder">الطالب</h1>
             </div>
-        </div>
-        <p class="welcome-subtitle">في منصتنا التعليمية الرائعة</p>
-    </div>
+            
+            <div id="guestGreeting">
+                <h1 class="main-title">منصة مَســـار</h1>
+            </div>
 
+            <p class="sub-title">منصة متكاملة من اعدادي  لثانوي </p>
+            <div class="title-separator"></div>
+        </div>
+
+        <!-- النقاط السفلية (Pagination) -->
+        <div class="hero-pagination">
+            <span class="hp-dot active"></span>
+            <span class="hp-dot"></span>
+            <span class="hp-dot"></span>
+        </div>
+    </div>
+</section>
     <!-- <div style="text-align:center; padding: 50px 5%; background: var(--surface);">
         <p>اختر مرحلتك الدراسية وشاهد أفضل الشروحات</p>
     </div> -->
@@ -59,8 +89,95 @@
             </div>
         </div>
     </section>
+<section class="subjects-section">
+    <h2 class="section-title">المواد الدراسية</h2>
+    
+    <div class="subjects-container">
+        <div class="subjects-wrapper" id="subjectsWrapper">
+            <!-- الكروت ستظهر هنا بواسطة JS -->
+        </div>
+    </div>
 
-    <div id="latest-videos"></div>
+    <!-- شريط التحكم السفلي -->
+    <div class="subjects-controls">
+        <button class="nav-btn next" onclick="scrollSubjects(1)">→</button>
+        <div class="pagination-dots" id="paginationDots"></div>
+        <button class="nav-btn prev" onclick="scrollSubjects(-1)">←</button>
+    </div>
+</section>
+<!-- <div id="latest-videos"></div> -->
+
+<section class="courses-section">
+    <div class="container">
+        <h2 class="section-main-title">كورساتنا المتاحة للعام 2025/2026</h2>
+        
+        <div class="courses-container">
+            <!-- سهم التنقل الأيمن -->
+            <button class="course-nav-btn next" onclick="scrollCourses(1)">&#10095;</button>
+            
+            <div class="courses-wrapper" id="freeCoursesWrapper">
+                <!-- الكروت ستتولد هنا بواسطة JavaScript -->
+            </div>
+
+            <!-- سهم التنقل الأيسر -->
+            <button class="course-nav-btn prev" onclick="scrollCourses(-1)">&#10094;</button>
+        </div>
+
+        <!-- نقط التنقل -->
+        <div class="course-dots" id="freeCourseDots"></div>
+    </div>
+</section>
+
+    <footer class="site-footer">
+    <div class="footer-container">
+        <!-- الصف العلوي -->
+        <div class="footer-top">
+            <div class="footer-logo">
+                <img src="imges/logo.png" alt="MASAR Logo"> <!-- استبدل بشعار مسار -->
+                <span>MASAR-مَســـار</span>
+            </div>
+            
+            <div class="footer-social">
+                <span>تابعنا على السوشيال ميديا</span>
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                </div>
+            </div>
+        </div>
+
+        <hr class="footer-line">
+
+        <!-- الصف السفلي -->
+        <div class="footer-bottom">
+            <div class="footer-info">
+                <p>© 2024 مَســـار. جميع الحقوق محفوظة. تنفيذ وتطوير <span>MASAR Team</span></p>
+            </div>
+
+            <div class="footer-nav">
+                <a href="#">من نحن</a>
+                <a href="#">مساعدة</a>
+                <a href="#">سياسة الخصوصية</a>
+                <a href="#">شروط الاستخدام</a>
+            </div>
+
+            <div class="footer-language">
+                <button class="lang-btn">
+                    <i class="fas fa-globe"></i>
+                    English
+                </button>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- استدعاء مكتبة الأيقونات Font Awesome (مهم جداً لظهور الرموز) -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+
+    
+
     <script src="script.js" defer></script>
 </body>
 </html>
