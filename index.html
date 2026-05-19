@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="style.css">
+    <title>منصة الأستاذ التعليمية</title>
+</head>
+<body class="home-page">
+    <header>
+        <div class="header-inner">
+            <div class="header-left">
+                <div class="logo">
+                    <span class="logo-mark">
+                        <img class="logo-dark" src="imges/logo.png" alt="MASAR-مَســـار logo dark">
+                        <img class="logo-light" src="imges/logo2.png" alt="MASAR-مَســـار logo light">
+                    </span>
+                    <span>MASAR-مَســـار</span>
+                </div>
+                <div class="header-icons">
+                    <button class="icon-btn theme-switcher" data-theme="light" aria-label="وضع النهار">☀</button>
+                    <button class="icon-btn theme-switcher" data-theme="dark" aria-label="وضع الظلام">🌙</button>
+                </div>
+            </div>
+            <nav class="header-actions">
+                <a href="login.html" class="btn-outline">تسجيل الدخول</a>
+                <a href="register.html" class="btn-fill">حساب جديد</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="welcome-container">
+        <div class="welcome-3d-card">
+            <div class="card-inner">
+                <div class="card-front">
+                    <div class="welcome-text">
+                        <h2>أهلاً بك</h2>
+                        <h1 class="student-name">الطالب</h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <p class="welcome-subtitle">في منصتنا التعليمية الرائعة</p>
+    </div>
+
+    <!-- <div style="text-align:center; padding: 50px 5%; background: var(--surface);">
+        <p>اختر مرحلتك الدراسية وشاهد أفضل الشروحات</p>
+    </div> -->
+
+    <!-- قسم المعلمين -->
+    <section class="teachers-section">
+        <div class="section-container">
+            <h2 class="section-title"> المُعلمين</h2>
+            <p class="section-subtitle">تعلم من أفضل الأساتذة المتخصصين</p>
+            <div class="section-actions">
+                <a href="teachers.html" class="btn-fill">تصفح جميع المعلمين</a>
+            </div>
+            <div class="teachers-carousel">
+                <div class="teachers-grid" id="teachersGrid"></div>
+            </div>
+        </div>
+    </section>
+
+    <div id="latest-videos"></div>
+    <script src="script.js" defer></script>
+</body>
+</html>

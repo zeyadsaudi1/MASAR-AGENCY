@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="video-security.css">
+    <title>مشاهدة الفيديو - مسار</title>
+</head>
+<body class="secure-video-page">
+
+    <!-- مؤشر الحماية يضاف تلقائياً من JS -->
+
+    <div style="padding: 25px 5%; max-width: 1200px; margin: 0 auto;">
+
+        <!-- تعليمات المشاهدة -->
+        <div class="watch-instructions">
+            <span class="instruction-icon">🛡️</span>
+            <div class="instruction-content">
+                <h3>⚠️ تعليمات هامة - نظام حماية مفعّل:</h3>
+                <ul>
+                    <li>مسموح لك بمشاهدة هذا الفيديو <b>3 مرات فقط</b>.</li>
+                    <li>يمنع تماماً أخذ لقطات شاشة (Screenshot) أو تصوير الشاشة.</li>
+                    <li>غير مسموح بتغيير سرعة الفيديو أو التقديم/الترجيع.</li>
+                    <li>نظام الحماية سيقوم بحظر حسابك تلقائياً عند اكتشاف مخالفة.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- حاوية الفيديو المحمي -->
+        <div class="video-secure-container" id="videoContainer">
+
+            <!-- الفيديو -->
+            <video id="secureVideo" preload="metadata" playsinline disablePictureInPicture controlsList="nodownload noplaybackrate">
+                <!-- مصدر الفيديو يتم تعيينه من JS أو من الخادم -->
+                <source src="" type="video/mp4">
+                متصفحك لا يدعم تشغيل الفيديو
+            </video>
+
+            <!-- العلامة المائية المتحركة -->
+            <div class="video-watermark" id="videoWatermark"></div>
+
+            <!-- حالة التحميل -->
+            <div class="video-loading-overlay" id="loadingOverlay" style="display:none;">
+                <div class="loading-spinner"></div>
+                <p class="loading-text">جاري تحميل الفيديو...</p>
+            </div>
+
+            <!-- الكونترولز المخصصة -->
+            <div class="custom-video-controls">
+                <!-- شريط التقدم (للعرض فقط) -->
+                <div class="video-progress-wrapper">
+                    <div class="video-progress-fill" id="progressFill"></div>
+                </div>
+
+                <div class="controls-row">
+                    <div class="controls-left">
+                        <!-- تشغيل/إيقاف -->
+                        <button class="ctrl-btn play-btn" id="playBtn" title="تشغيل / إيقاف">▶</button>
+
+                        <!-- الصوت -->
+                        <div class="volume-wrapper">
+                            <button class="ctrl-btn" id="volumeBtn" title="الصوت">🔊</button>
+                            <input type="range" class="volume-slider" id="volumeSlider" min="0" max="1" step="0.05" value="1">
+                        </div>
+
+                        <!-- الوقت -->
+                        <span class="time-display" id="timeDisplay">00:00 / 00:00</span>
+                    </div>
+
+                    <div class="controls-right">
+                        <!-- الجودة -->
+                        <button class="quality-badge" id="qualityBtn">HD</button>
+
+                        <!-- ملء الشاشة -->
+                        <button class="ctrl-btn" id="fullscreenBtn" title="ملء الشاشة">⛶</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- قائمة الجودة -->
+            <div class="quality-menu" id="qualityMenu">
+                <button class="quality-option active" data-quality="1080">1080p HD</button>
+                <button class="quality-option" data-quality="720">720p</button>
+                <button class="quality-option" data-quality="480">480p</button>
+                <button class="quality-option" data-quality="360">360p</button>
+            </div>
+        </div>
+
+        <!-- معلومات الفيديو -->
+        <div class="views-counter">
+            <span class="video-title-display" id="videoTitle">المحاضرة</span>
+            <div class="views-info">
+                <span>👁 المشاهدات المتبقية: <strong id="remainingViews">3</strong> / 3</span>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="script.js" defer></script>
+    <script src="video-security.js" defer></script>
+</body>
+</html>

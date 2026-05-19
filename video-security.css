@@ -1,0 +1,753 @@
+/* ============================================
+   MASAR Video Security System - CSS
+   نظام حماية الفيديو - أنماط CSS
+   ============================================ */
+
+/* ─── منع الـ Selection على كل الصفحة ─── */
+.secure-video-page * {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+/* ─── منع الـ Drag ─── */
+.secure-video-page img,
+.secure-video-page video,
+.secure-video-page canvas {
+    -webkit-user-drag: none;
+    user-drag: none;
+}
+
+/* ─── منع الطباعة ─── */
+@media print {
+    body {
+        display: none !important;
+    }
+}
+
+/* ─── منع DevTools / Touch Callout ─── */
+.secure-video-page {
+    -webkit-touch-callout: none;
+}
+
+/* ============================================
+   Video Container - حاوية الفيديو
+   ============================================ */
+
+.video-secure-container {
+    position: relative;
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto;
+    background: #000;
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow:
+        0 30px 80px rgba(0, 0, 0, 0.5),
+        0 0 0 1px rgba(221, 168, 82, 0.15);
+    aspect-ratio: 16 / 9;
+}
+
+.video-secure-container video {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: contain;
+    pointer-events: none;
+}
+
+/* إخفاء الكونترولز الافتراضية */
+.video-secure-container video::-webkit-media-controls {
+    display: none !important;
+}
+
+.video-secure-container video::-webkit-media-controls-enclosure {
+    display: none !important;
+}
+
+/* ============================================
+   Watermark - العلامة المائية المتحركة
+   ============================================ */
+
+.video-watermark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 10;
+    overflow: hidden;
+}
+
+.watermark-text {
+    position: absolute;
+    color: rgba(255, 255, 255, 0.08);
+    font-size: 1.1rem;
+    font-weight: 700;
+    white-space: nowrap;
+    letter-spacing: 2px;
+    animation: watermarkDrift 20s linear infinite;
+    text-shadow: 0 0 8px rgba(255, 255, 255, 0.05);
+}
+
+.watermark-text:nth-child(1) {
+    top: 15%;
+    animation-duration: 25s;
+    animation-delay: 0s;
+}
+
+.watermark-text:nth-child(2) {
+    top: 45%;
+    animation-duration: 30s;
+    animation-delay: -8s;
+}
+
+.watermark-text:nth-child(3) {
+    top: 75%;
+    animation-duration: 22s;
+    animation-delay: -15s;
+}
+
+@keyframes watermarkDrift {
+    0% {
+        transform: translateX(100%);
+    }
+    100% {
+        transform: translateX(-100%);
+    }
+}
+
+/* ============================================
+   Custom Video Controls - الكونترولز المخصصة
+   ============================================ */
+
+.custom-video-controls {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0.92) 0%, rgba(0, 0, 0, 0.6) 60%, transparent 100%);
+    padding: 50px 20px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 20;
+    opacity: 1;
+    transition: opacity 0.4s ease;
+}
+
+.video-secure-container:not(:hover) .custom-video-controls {
+    opacity: 0.3;
+}
+
+.video-secure-container:hover .custom-video-controls {
+    opacity: 1;
+}
+
+/* Progress Bar - للعرض فقط */
+.video-progress-wrapper {
+    width: 100%;
+    height: 5px;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 10px;
+    overflow: hidden;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.video-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #dda852, #e8b76a, #ffd700);
+    border-radius: 10px;
+    width: 0%;
+    transition: width 0.3s linear;
+    position: relative;
+}
+
+.video-progress-fill::after {
+    content: '';
+    position: absolute;
+    right: -6px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 12px;
+    height: 12px;
+    background: #ffd700;
+    border-radius: 50%;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.6);
+}
+
+/* Controls Row */
+.controls-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.controls-left,
+.controls-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.ctrl-btn {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #fff;
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.15rem;
+    transition: all 0.25s ease;
+    backdrop-filter: blur(8px);
+}
+
+.ctrl-btn:hover {
+    background: rgba(221, 168, 82, 0.3);
+    border-color: rgba(221, 168, 82, 0.5);
+    transform: scale(1.08);
+}
+
+.ctrl-btn:active {
+    transform: scale(0.95);
+}
+
+.ctrl-btn.play-btn {
+    width: 48px;
+    height: 48px;
+    background: linear-gradient(135deg, #dda852, #e8b76a);
+    color: #13201c;
+    border: none;
+    font-size: 1.3rem;
+    box-shadow: 0 4px 15px rgba(221, 168, 82, 0.4);
+}
+
+.ctrl-btn.play-btn:hover {
+    box-shadow: 0 6px 25px rgba(221, 168, 82, 0.6);
+}
+
+/* Time Display */
+.time-display {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.85rem;
+    font-family: 'Courier New', monospace;
+    letter-spacing: 1px;
+    direction: ltr;
+    min-width: 100px;
+    text-align: center;
+}
+
+/* Volume Control */
+.volume-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.volume-slider {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 80px;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+    outline: none;
+    direction: ltr;
+}
+
+.volume-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 14px;
+    height: 14px;
+    background: #dda852;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 0 8px rgba(221, 168, 82, 0.5);
+}
+
+.volume-slider::-moz-range-thumb {
+    width: 14px;
+    height: 14px;
+    background: #dda852;
+    border-radius: 50%;
+    cursor: pointer;
+    border: none;
+}
+
+/* Quality Badge */
+.quality-badge {
+    background: rgba(221, 168, 82, 0.15);
+    color: #dda852;
+    border: 1px solid rgba(221, 168, 82, 0.3);
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    letter-spacing: 1px;
+}
+
+.quality-badge:hover {
+    background: rgba(221, 168, 82, 0.3);
+}
+
+/* Quality Menu */
+.quality-menu {
+    position: absolute;
+    bottom: 80px;
+    right: 20px;
+    background: rgba(15, 15, 15, 0.95);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(221, 168, 82, 0.2);
+    border-radius: 12px;
+    padding: 8px 0;
+    z-index: 50;
+    display: none;
+    min-width: 140px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+}
+
+.quality-menu.active {
+    display: block;
+    animation: fadeSlideUp 0.2s ease;
+}
+
+.quality-option {
+    display: block;
+    width: 100%;
+    padding: 10px 18px;
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.9rem;
+    cursor: pointer;
+    text-align: right;
+    transition: all 0.15s ease;
+}
+
+.quality-option:hover {
+    background: rgba(221, 168, 82, 0.15);
+    color: #dda852;
+}
+
+.quality-option.active {
+    color: #dda852;
+    font-weight: 700;
+}
+
+.quality-option.active::before {
+    content: '✓ ';
+}
+
+@keyframes fadeSlideUp {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ============================================
+   Security Warning Overlay - تحذير أمني
+   ============================================ */
+
+.security-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.92);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999999;
+    backdrop-filter: blur(15px);
+    animation: overlayIn 0.3s ease;
+}
+
+@keyframes overlayIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.warning-box {
+    background: linear-gradient(145deg, #1a1a1a, #111);
+    border: 2px solid rgba(231, 76, 60, 0.5);
+    padding: 50px 45px;
+    border-radius: 24px;
+    text-align: center;
+    max-width: 460px;
+    width: 90%;
+    box-shadow:
+        0 30px 80px rgba(0, 0, 0, 0.7),
+        0 0 60px rgba(231, 76, 60, 0.15);
+    animation: warningPulse 0.5s ease;
+}
+
+@keyframes warningPulse {
+    0% {
+        transform: scale(0.85);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1.02);
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.warning-icon {
+    font-size: 4rem;
+    margin-bottom: 15px;
+    display: block;
+    animation: shakeIcon 0.5s ease;
+}
+
+@keyframes shakeIcon {
+    0%, 100% { transform: translateX(0); }
+    20% { transform: translateX(-10px); }
+    40% { transform: translateX(10px); }
+    60% { transform: translateX(-5px); }
+    80% { transform: translateX(5px); }
+}
+
+.warning-box h2 {
+    color: #e74c3c;
+    font-size: 1.6rem;
+    margin: 0 0 15px;
+    font-weight: 800;
+}
+
+.warning-box p {
+    color: rgba(255, 255, 255, 0.75);
+    font-size: 1rem;
+    line-height: 1.8;
+    margin: 0 0 10px;
+}
+
+.warning-box .report-note {
+    color: rgba(231, 76, 60, 0.7);
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-top: 10px;
+}
+
+.warning-dismiss-btn {
+    margin-top: 25px;
+    background: linear-gradient(135deg, #e74c3c, #c0392b);
+    color: #fff;
+    border: none;
+    padding: 14px 40px;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 6px 20px rgba(231, 76, 60, 0.4);
+}
+
+.warning-dismiss-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(231, 76, 60, 0.5);
+}
+
+/* ============================================
+   Violation Counter Badge - شارة المخالفات
+   ============================================ */
+
+.violation-badge {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    background: rgba(231, 76, 60, 0.15);
+    border: 1px solid rgba(231, 76, 60, 0.3);
+    color: #e74c3c;
+    padding: 8px 16px;
+    border-radius: 30px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    z-index: 9999;
+    backdrop-filter: blur(10px);
+    display: none;
+}
+
+.violation-badge.visible {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    animation: badgeIn 0.3s ease;
+}
+
+@keyframes badgeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ============================================
+   Shield Active Indicator - مؤشر الحماية
+   ============================================ */
+
+.shield-indicator {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: rgba(44, 167, 114, 0.1);
+    border: 1px solid rgba(44, 167, 114, 0.25);
+    color: #2ca772;
+    padding: 8px 16px;
+    border-radius: 30px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    backdrop-filter: blur(10px);
+}
+
+.shield-dot {
+    width: 8px;
+    height: 8px;
+    background: #2ca772;
+    border-radius: 50%;
+    animation: pulse 2s ease infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+        box-shadow: 0 0 0 0 rgba(44, 167, 114, 0.5);
+    }
+    50% {
+        opacity: 0.7;
+        box-shadow: 0 0 0 6px rgba(44, 167, 114, 0);
+    }
+}
+
+/* ============================================
+   Instructions Panel - تعليمات المشاهدة
+   ============================================ */
+
+.watch-instructions {
+    max-width: 1100px;
+    margin: 0 auto 25px;
+    background: linear-gradient(135deg, rgba(231, 76, 60, 0.06), rgba(221, 168, 82, 0.06));
+    border: 1px solid rgba(231, 76, 60, 0.15);
+    border-radius: 16px;
+    padding: 20px 25px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.instruction-icon {
+    font-size: 2rem;
+    flex-shrink: 0;
+}
+
+.instruction-content h3 {
+    margin: 0 0 8px;
+    color: var(--text-dark);
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+.instruction-content ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.instruction-content li {
+    color: var(--gray);
+    font-size: 0.88rem;
+    line-height: 1.8;
+    padding-right: 15px;
+    position: relative;
+}
+
+.instruction-content li::before {
+    content: '•';
+    position: absolute;
+    right: 0;
+    color: #e74c3c;
+    font-weight: bold;
+}
+
+/* ============================================
+   Views Counter - عداد المشاهدات
+   ============================================ */
+
+.views-counter {
+    max-width: 1100px;
+    margin: 20px auto 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+}
+
+.views-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(221, 168, 82, 0.08);
+    border: 1px solid rgba(221, 168, 82, 0.15);
+    padding: 10px 18px;
+    border-radius: 12px;
+}
+
+.views-info span {
+    color: var(--text-dark);
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.views-info strong {
+    color: #dda852;
+}
+
+.video-title-display {
+    color: var(--text-dark);
+    font-size: 1.2rem;
+    font-weight: 700;
+}
+
+/* ============================================
+   Loading State - حالة التحميل
+   ============================================ */
+
+.video-loading-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 15;
+}
+
+.loading-spinner {
+    width: 50px;
+    height: 50px;
+    border: 3px solid rgba(221, 168, 82, 0.15);
+    border-top-color: #dda852;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.loading-text {
+    color: rgba(255, 255, 255, 0.6);
+    margin-top: 15px;
+    font-size: 0.9rem;
+}
+
+/* ============================================
+   Responsive - التجاوب
+   ============================================ */
+
+@media (max-width: 768px) {
+    .video-secure-container {
+        border-radius: 12px;
+    }
+
+    .custom-video-controls {
+        padding: 30px 12px 10px;
+    }
+
+    .ctrl-btn {
+        width: 36px;
+        height: 36px;
+        font-size: 1rem;
+    }
+
+    .ctrl-btn.play-btn {
+        width: 42px;
+        height: 42px;
+    }
+
+    .time-display {
+        font-size: 0.75rem;
+        min-width: 80px;
+    }
+
+    .volume-slider {
+        width: 50px;
+    }
+
+    .watch-instructions {
+        flex-direction: column;
+        text-align: center;
+        padding: 15px;
+    }
+
+    .instruction-content li {
+        padding-right: 0;
+    }
+
+    .instruction-content li::before {
+        display: none;
+    }
+
+    .views-counter {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .warning-box {
+        padding: 35px 25px;
+    }
+
+    .warning-box h2 {
+        font-size: 1.3rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .quality-badge {
+        display: none;
+    }
+
+    .volume-wrapper {
+        display: none;
+    }
+
+    .controls-row {
+        gap: 6px;
+    }
+}

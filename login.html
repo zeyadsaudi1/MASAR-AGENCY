@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="style.css">
+    <title>تسجيل الدخول</title>
+</head>
+<body>
+    <header>
+        <div class="header-inner">
+            <div class="header-left">
+                <div class="logo">
+                    <span class="logo-mark">
+                        <img class="logo-dark" src="imges/logo.png" alt="MASAR-مَســـار logo dark">
+                        <img class="logo-light" src="imges/logo2.png" alt="MASAR-مَســـار logo light">
+                    </span>
+                    <span>MASAR-مَســـار</span>
+                </div>
+                <div class="header-icons">
+                    <button class="icon-btn theme-switcher" data-theme="light" aria-label="وضع النهار">☀</button>
+                    <button class="icon-btn theme-switcher" data-theme="dark" aria-label="وضع الظلام">🌙</button>
+                </div>
+            </div>
+            <nav class="header-actions">
+                <a href="register.html" class="btn-fill">حساب جديد</a>
+                <a href="index.html" class="btn-outline">الرئيسية</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="auth-page">
+        <div class="auth-left">
+            <img src="imges/st2.jpg" alt="شعار MASAR-مَســـار" class="hero-image">
+            <div class="auth-left-content">
+                <h1>مرحباً بك مرة أخرى</h1>
+                <p>ادخل بياناتك لتواصل رحلتك التعليمية مع MASAR-مَســـار.</p>
+            </div>
+        </div>
+        <div class="auth-right">
+            <div class="form-panel">
+                <div class="auth-logo">
+                    <img src="imges/logo2.png" alt="MASAR logo">
+                    <span>MASAR-مَســـار</span>
+                </div>
+                <p class="form-subtitle">تسجيل الدخول</p>
+                <p class="form-note">ادخل رقم الهاتف وكلمة المرور للدخول إلى حسابك.</p>
+                <form onsubmit="return handleLogin(event)">
+                    <div class="form-group">
+                        <label>رقم الهاتف</label>
+                        <input type="tel" required>
+                    </div>
+                    <div class="form-group">
+                        <label>كلمة المرور</label>
+                        <div class="password-field">
+                            <input type="password" required>
+                            <button type="button" class="password-toggle" onclick="togglePasswordVisibility(this)">👁️</button>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-fill" style="width:100%">تسجيل الدخول</button>
+                </form>
+                <p class="form-footer">ليس لديك حساب؟ <a href="register.html">سجل الآن</a></p>
+            </div>
+        </div>
+    </div>
+    <script src="script.js" defer></script>
+</body>
+</html>

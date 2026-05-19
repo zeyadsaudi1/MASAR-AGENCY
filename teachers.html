@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="style.css">
+    <title>جميع المعلمين - منصة الأستاذ التعليمية</title>
+</head>
+<body class="teachers-page">
+    <header>
+        <div class="header-inner">
+            <div class="header-left">
+                <div class="logo">
+                    <span class="logo-mark">
+                        <img class="logo-dark" src="imges/logo.png" alt="MASAR-مَســـار logo dark">
+                        <img class="logo-light" src="imges/logo2.png" alt="MASAR-مَســـار logo light">
+                    </span>
+                    <span>MASAR-مَســـار</span>
+                </div>
+                <div class="header-icons">
+                    <button class="icon-btn theme-switcher" data-theme="light" aria-label="وضع النهار">☀</button>
+                    <button class="icon-btn theme-switcher" data-theme="dark" aria-label="وضع الظلام">🌙</button>
+                </div>
+            </div>
+            <nav class="header-actions">
+                <a href="index.html" class="btn-outline">الرئيسية</a>
+                <a href="login.html" class="btn-outline">تسجيل الدخول</a>
+                <a href="register.html" class="btn-fill">حساب جديد</a>
+            </nav>
+        </div>
+    </header>
+
+    <section class="teachers-section">
+        <div class="section-container">
+            <h2 class="section-title">جميع المعلمين</h2>
+            <p class="section-subtitle"> كل المعلمين المتاحين في المنصة</p>
+            <div class="teachers-grid" id="teachersGrid"></div>
+        </div>
+    </section>
+
+    <script src="script.js" defer></script>
+</body>
+</html>
