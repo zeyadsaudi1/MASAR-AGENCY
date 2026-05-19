@@ -11,7 +11,7 @@ const teachersData = [
         name: 'علي عزيز',
         subject: 'الرياضيات',
         subjectAr: 'الرياضيات',
-        image: 'imges/1.png',
+        image: 'imges/st.jpg',
         students: '245',
         rating: '4.9',
         bio: 'معلم رياضيات متخصص مع 10 سنوات خبرة',
@@ -236,7 +236,9 @@ function handleLogin(event) {
     event.preventDefault();
     const phone = document.querySelector('input[type="tel"]').value;
     const password = document.querySelector('input[type="password"]').value;
-    
+    // مثال: أضف هذا السطر بعد نجاح تسجيل الدخول لتجربة الرصيد
+data.user.balance = 50; // افتراض أن الطالب معه 50 جنيه
+localStorage.setItem('currentUser', JSON.stringify(data.user));
     // الحساب الإداري
     if (phone === '01234567890' && password === 'admin') {
         window.location.href = 'admin.html';
@@ -640,7 +642,7 @@ function populateVideoSelect() {
 function loadVideos() {
     const latest = document.getElementById('latest-videos');
     if (!latest) return;
-    latest.innerHTML = '<h2>الأحدث</h2><div class="video-grid">';
+    latest.innerHTML = '<h2>احدث الفيديوهات</h2><div class="video-grid">';
     videos.forEach(v => {
         latest.innerHTML += `
             <div class="video-card">
@@ -852,3 +854,187 @@ function renderTeachers() {
     teachersGrid.addEventListener('touchmove', move);
     teachersGrid.addEventListener('touchend', stopDragging);
 }
+
+const subjectsData = [
+    { name: "صيدله", teachers: 1, img: "imges/sub1.png" },
+    { name: "Integrated Science", teachers: 1, img: "imges/sub2.png" },
+    { name: "bue", teachers: 1, img: "imges/sub3.png" },
+    { name: "جغرافيا", teachers: 0, img: "imges/sub4.png" },
+    { name: "لغة عربية", teachers: 5, img: "imges/sub5.png" },
+    { name: "ASU LEVEL 1 general", teachers: 2, img: "imges/sub6.png" },
+    { name: "كيمياء", teachers: 3, img: "imges/sub1.png" },
+    { name: "فيزياء", teachers: 4, img: "imges/sub2.png" }
+];
+
+function renderSubjects() {
+    const wrapper = document.getElementById('subjectsWrapper');
+    const dotsContainer = document.getElementById('paginationDots');
+    if (!wrapper) return;
+
+    wrapper.innerHTML = subjectsData.map(sub => `
+        <div class="subject-card">
+            <img src="${sub.img}" class="subject-img" alt="${sub.name}">
+            <h3>${sub.name}</h3>
+            <span class="teacher-count">${sub.teachers} معلمين</span>
+        </div>
+    `).join('');
+
+    // إنشاء النقط بناءً على عدد المواد
+    dotsContainer.innerHTML = subjectsData.map((_, i) => 
+        `<span class="dot ${i === 0 ? 'active' : ''}" onclick="scrollToIndex(${i})"></span>`
+    ).join('');
+}
+
+function scrollSubjects(direction) {
+    const wrapper = document.getElementById('subjectsWrapper');
+    const scrollAmount = wrapper.clientWidth / 2;
+    wrapper.scrollBy({ left: direction * scrollAmount, behavior: 'smooth' });
+}
+
+function scrollToIndex(index) {
+    const wrapper = document.getElementById('subjectsWrapper');
+    const cardWidth = wrapper.querySelector('.subject-card').clientWidth + 20;
+    wrapper.scrollTo({ left: index * cardWidth, behavior: 'smooth' });
+}
+
+// تحديث النقطة النشطة عند التمرير
+document.getElementById('subjectsWrapper')?.addEventListener('scroll', function() {
+    const wrapper = this;
+    const index = Math.round(wrapper.scrollLeft / (wrapper.clientWidth / 2));
+    const dots = document.querySelectorAll('.dot');
+    dots.forEach((dot, i) => {
+        dot.classList.toggle('active', i === index);
+    });
+});
+
+// تشغيل الوظيفة
+document.addEventListener('DOMContentLoaded', renderSubjects);
+
+// بيانات الكورسات المجانية
+const freeCoursesData = [
+    {
+        title: "كورس الشهر الثالث- الكيمياء العضوية - عام",
+        price: "مجاني",
+        image: "imges/st2.jpg", // استبدل بصورة حقيقية
+        date: "الأربعاء، ١٨ مارس ٢٠٢٦",
+        chapter: "الباب الخامس"
+    },
+    {
+        title: "كورس الترم الثاني كاملاً - 2 ث",
+        price: "مجاني",
+        image: "imges/st.jpg",
+        date: "الخميس، ٢٩ يناير ٢٠٢٦",
+        chapter: "أول محاضرة بداية من يوم 2/8"
+    },
+    {
+        title: "كورس الشهر الثالث- الكيمياء العضوية - ازهر",
+        price: "مجاني",
+        image: "imges/st2.jpg",
+        date: "الأربعاء، ١٨ مارس ٢٠٢٦",
+        chapter: "الباب الخامس"
+    },
+    {
+        title: "كورس الترم الثاني كاملاً - 2 ث",
+        price: "مجاني",
+        image: "imges/st.jpg",
+        date: "الخميس، ٢٩ يناير ٢٠٢٦",
+        chapter: "أول محاضرة بداية من يوم 2/8"
+    },
+    {
+        title: "كورس الشهر الثالث- الكيمياء العضوية - ازهر",
+        price: "مجاني",
+        image: "imges/st2.jpg",
+        date: "الأربعاء، ١٨ مارس ٢٠٢٦",
+        chapter: "الباب الخامس"
+    },
+    {
+        title: "كورس الترم الثاني كاملاً - 2 ث",
+        price: "مجاني",
+        image: "imges/st.jpg",
+        date: "الخميس، ٢٩ يناير ٢٠٢٦",
+        chapter: "أول محاضرة بداية من يوم 2/8"
+    },
+    {
+        title: "كورس الشهر الثالث- الكيمياء العضوية - ازهر",
+        price: "مجاني",
+        image: "imges/st2.jpg",
+        date: "الأربعاء، ١٨ مارس ٢٠٢٦",
+        chapter: "الباب الخامس"
+    },
+    {
+        title: "كورس الترم الثاني كاملاً - 2 ث",
+        price: "مجاني",
+        image: "imges/st.jpg",
+        date: "الخميس، ٢٩ يناير ٢٠٢٦",
+        chapter: "أول محاضرة بداية من يوم 2/8"
+    }
+];
+
+function renderFreeCourses() {
+    const wrapper = document.getElementById('freeCoursesWrapper');
+    const dotsContainer = document.getElementById('freeCourseDots');
+    if (!wrapper) return;
+
+    wrapper.innerHTML = freeCoursesData.map(course => `
+        <div class="course-card">
+            <img src="${course.image}" class="course-thumb" alt="${course.title}">
+            <div class="course-body">
+                <h3 class="course-title">${course.title}</h3>
+                <div class="course-price">${course.price}</div>
+                <div class="course-meta">
+                    <div class="meta-item"><i class="far fa-calendar-alt"></i> ${course.date}</div>
+                    <div class="meta-item"><i class="fas fa-book-open"></i> ${course.chapter}</div>
+                </div>
+                <div class="course-btns">
+                    <button class="btn-enter">الدخول للكورس</button>
+                    <button class="btn-join">الإشتراك في الكورس !</button>
+                </div>
+            </div>
+        </div>
+    `).join('');
+
+    // إنشاء النقط
+    dotsContainer.innerHTML = freeCoursesData.map((_, i) => 
+        `<span class="c-dot ${i === 0 ? 'active' : ''}" onclick="jumpToCourse(${i})"></span>`
+    ).join('');
+}
+
+// وظيفة تحريك الشريط بالأسهم
+window.scrollCourses = (direction) => {
+    const wrapper = document.getElementById('freeCoursesWrapper');
+    const scrollAmount = 375; // عرض الكارت + الفجوة
+    wrapper.scrollBy({ left: -direction * scrollAmount, behavior: 'smooth' });
+    setTimeout(updateCourseDots, 500);
+}
+
+function updateCourseDots() {
+    const wrapper = document.getElementById('freeCoursesWrapper');
+    const dots = document.querySelectorAll('.c-dot');
+    const index = Math.round(wrapper.scrollLeft / -375);
+    dots.forEach((dot, i) => dot.classList.toggle('active', i === index));
+}
+
+// استدعاء الوظيفة عند التحميل
+document.addEventListener('DOMContentLoaded', renderFreeCourses);
+
+
+function updateHeroDisplay() {
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    const userGreeting = document.getElementById('userGreeting');
+    const guestGreeting = document.getElementById('guestGreeting');
+    const userNamePlaceholder = document.getElementById('userNamePlaceholder');
+
+    if (currentUser) {
+        // حالة مسجل دخول: أهلاً بك + اسم الطالب
+        guestGreeting.style.display = 'none';
+        userGreeting.style.display = 'block';
+        userNamePlaceholder.textContent = currentUser.firstName;
+    } else {
+        // حالة غير مسجل: منصة مَســـار فقط
+        userGreeting.style.display = 'none';
+        guestGreeting.style.display = 'block';
+    }
+}
+
+// استدعي الوظيفة عند التحميل
+document.addEventListener('DOMContentLoaded', updateHeroDisplay);
