@@ -36,6 +36,7 @@
                 <li><button onclick="showSection('online')">المتصلين حالياً</button></li>
                 <li><button onclick="showSection('add-video')">إضافة فيديو</button></li>
                 <li><button onclick="showSection('generate-codes')">توليد أكواد</button></li>
+                <li><button onclick="showSection('teachers')">إدارة المعلمين</button></li>
             </ul>
         </aside>
         <main class="main-content">
@@ -59,8 +60,30 @@
                     <div class="form-group"><label>اختر الفيديو</label><select required onchange="setPrice(this.value)"></select></div>
                     <div class="form-group"><label>عدد الأكواد</label><input type="number" required></div>
                     <div class="form-group"><label>قيمة الكود (جنية)</label><input type="number" required id="code-price"></div>
-                    <button type="submit" class="btn-red">توليد وتصدير Excel</button>
+                    <button type="submit" class="btn-red">توليد وتصدير CSV</button>
                 </form>
+            </div>
+            <div id="teachers-section" style="display: none;">
+                <h3>إدارة المعلمين</h3>
+                <form onsubmit="handleAddTeacher(event)" class="form-container">
+                    <div class="form-group"><label>اسم المعلم</label><input type="text" id="teacher-name" required></div>
+                    <div class="form-group"><label>المادة الدراسية</label><input type="text" id="teacher-subject" required></div>
+                    <div class="form-group"><label>نبذة عن المعلم</label><input type="text" id="teacher-bio" required></div>
+                    <div class="form-group"><label>صورة المعلم</label><input type="file" id="teacher-image" accept="image/*" required></div>
+                    <div class="form-group">
+                        <label>الصفوف الدراسية</label>
+                        <div class="grades-checkboxes-container">
+                            <label><input type="checkbox" name="teacher-grades-check" value="الصف الأول الإعدادي"> الصف الأول الإعدادي</label>
+                            <label><input type="checkbox" name="teacher-grades-check" value="الصف الثاني الإعدادي"> الصف الثاني الإعدادي</label>
+                            <label><input type="checkbox" name="teacher-grades-check" value="الصف الثالث الإعدادي"> الصف الثالث الإعدادي</label>
+                            <label><input type="checkbox" name="teacher-grades-check" value="الصف الأول الثانوي"> الأول الثانوي</label>
+                            <label><input type="checkbox" name="teacher-grades-check" value="الصف الثاني الثانوي"> الثاني الثانوي</label>
+                            <label><input type="checkbox" name="teacher-grades-check" value="الصف الثالث الثانوي"> الثالث الثانوي</label>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-red">إضافة معلم</button>
+                </form>
+                <div id="teachers-list-admin" style="margin-top: 20px;"></div>
             </div>
         </main>
     </div>

@@ -5,140 +5,7 @@ let codes = [];
 let users = [];
 const API_URL = 'http://localhost:3000';
 
-const teachersData = [
-    {
-        id: 1,
-        name: 'علي عزيز',
-        subject: 'الرياضيات',
-        subjectAr: 'الرياضيات',
-        image: 'imges/st.jpg',
-        students: '245',
-        rating: '4.9',
-        bio: 'معلم رياضيات متخصص مع 10 سنوات خبرة',
-        grades: ['الصف الأول الإعدادي', 'الصف الثاني الإعدادي', 'الصف الثالث الإعدادي']
-    },
-    {
-        id: 2,
-        name: 'غادة ثروت',
-        subject: 'الEnglish',
-        subjectAr: 'اللغة الإنجليزية',
-        image: 'imges/st.jpg',
-        students: '312',
-        rating: '4.8',
-        bio: 'متخصصة في تعليم اللغة الإنجليزية بطرق حديثة',
-        grades: ['الصف الأول الثانوي', 'الصف الثاني الثانوي', 'الصف الثالث الثانوي']
-    },
-    {
-        id: 3,
-        name: 'تيموثيوس ناصر',
-        subject: 'التجارة',
-        subjectAr: 'كلية التجارة',
-        image: 'imges/st2.jpg',
-        students: '198',
-        rating: '4.7',
-        bio: 'خبير في مجال التجارة والإدارة الحديثة',
-        grades: ['الصف الثالث الإعدادي', 'الصف الأول الثانوي', 'الصف الثاني الثانوي']
-    },
-    {
-        id: 4,
-        name: 'تيموثيوس ناصر',
-        subject: 'التجارة',
-        subjectAr: 'كلية التجارة',
-        image: 'imges/st2.jpg',
-        students: '198',
-        rating: '4.7',
-        bio: 'خبير في مجال التجارة والإدارة الحديثة',
-        grades: ['الصف الثالث الإعدادي', 'الصف الأول الثانوي', 'الصف الثاني الثانوي']
-    },
-    {
-        id: 5,
-        name: 'تيموثيوس ناصر',
-        subject: 'التجارة',
-        subjectAr: 'كلية التجارة',
-        image: 'imges/st2.jpg',
-        students: '198',
-        rating: '4.7',
-        bio: 'خبير في مجال التجارة والإدارة الحديثة',
-        grades: ['الصف الثالث الإعدادي', 'الصف الأول الثانوي', 'الصف الثاني الثانوي']
-    },
-    {
-        id: 6,
-        name: 'تيموثيوس ناصر',
-        subject: 'التجارة',
-        subjectAr: 'كلية التجارة',
-        image: 'imges/st2.jpg',
-        students: '198',
-        rating: '4.7',
-        bio: 'خبير في مجال التجارة والإدارة الحديثة',
-        grades: ['الصف الثالث الإعدادي', 'الصف الأول الثانوي', 'الصف الثاني الثانوي']
-    },
-    {
-        id: 7,
-        name: 'تيموثيوس ناصر',
-        subject: 'التجارة',
-        subjectAr: 'كلية التجارة',
-        image: 'imges/st2.jpg',
-        students: '198',
-        rating: '4.7',
-        bio: 'خبير في مجال التجارة والإدارة الحديثة',
-        grades: ['الصف الثالث الإعدادي', 'الصف الأول الثانوي', 'الصف الثاني الثانوي']
-    },
-    {
-        id: 8,
-        name: 'تيموثيوس ناصر',
-        subject: 'التجارة',
-        subjectAr: 'كلية التجارة',
-        image: 'imges/st2.jpg',
-        students: '198',
-        rating: '4.7',
-        bio: 'خبير في مجال التجارة والإدارة الحديثة',
-        grades: ['الصف الثالث الإعدادي', 'الصف الأول الثانوي', 'الصف الثاني الثانوي']
-    },
-    {
-        id: 9,
-        name: 'تيموثيوس ناصر',
-        subject: 'التجارة',
-        subjectAr: 'كلية التجارة',
-        image: 'imges/st2.jpg',
-        students: '198',
-        rating: '4.7',
-        bio: 'خبير في مجال التجارة والإدارة الحديثة',
-        grades: ['الصف الثالث الإعدادي', 'الصف الأول الثانوي', 'الصف الثاني الثانوي']
-    },
-    {
-        id: 10,
-        name: 'تيموثيوس ناصر',
-        subject: 'التجارة',
-        subjectAr: 'كلية التجارة',
-        image: 'imges/st2.jpg',
-        students: '198',
-        rating: '4.7',
-        bio: 'خبير في مجال التجارة والإدارة الحديثة',
-        grades: ['الصف الثالث الإعدادي', 'الصف الأول الثانوي', 'الصف الثاني الثانوي']
-    },
-    {
-        id: 11,
-        name: 'تيموثيوس ناصر',
-        subject: 'التجارة',
-        subjectAr: 'كلية التجارة',
-        image: 'imges/st2.jpg',
-        students: '198',
-        rating: '4.7',
-        bio: 'خبير في مجال التجارة والإدارة الحديثة',
-        grades: ['الصف الثالث الإعدادي', 'الصف الأول الثانوي', 'الصف الثاني الثانوي']
-    },
-    {
-        id: 12,
-        name: 'تيموثيوس ناصر',
-        subject: 'التجارة',
-        subjectAr: 'كلية التجارة',
-        image: 'imges/st2.jpg',
-        students: '198',
-        rating: '4.7',
-        bio: 'خبير في مجال التجارة والإدارة الحديثة',
-        grades: ['الصف الثالث الإعدادي', 'الصف الأول الثانوي', 'الصف الثاني الثانوي']
-    }
-];
+let teachers = [];
 
 // تحميل البيانات من قاعدة البيانات عند بدء التطبيق
 async function loadDataFromDB() {
@@ -146,15 +13,18 @@ async function loadDataFromDB() {
         const videoRes = await fetch(`${API_URL}/api/videos`);
         const codeRes = await fetch(`${API_URL}/api/codes`);
         const userRes = await fetch(`${API_URL}/api/users`);
+        const teacherRes = await fetch(`${API_URL}/api/teachers`);
         
         videos = await videoRes.json();
         codes = await codeRes.json();
         users = await userRes.json();
+        teachers = await teacherRes.json();
     } catch (err) {
         console.log('البيانات ستحمل من localStorage في الوقت الحالي');
         videos = JSON.parse(localStorage.getItem('videos')) || [];
-        codes = JSON.parse(localStorage.getItem('codes')) || {};
+        codes = JSON.parse(localStorage.getItem('codes')) || [];
         users = JSON.parse(localStorage.getItem('users')) || [];
+        teachers = [];
     }
 }
 
@@ -184,19 +54,55 @@ if (themeButtons.length > 0) {
     applyTheme(getInitialTheme());
 }
 
-// تهيئة نموذج التسجيل المتعدد الخطوات
-document.addEventListener('DOMContentLoaded', function() {
-    // عرض اسم الطالب في صورة الترحيب
-    const studentNameElement = document.querySelector('.student-name');
-    if (studentNameElement) {
-        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-        if (currentUser && currentUser.name) {
-            studentNameElement.textContent = currentUser.name;
+// تهيئة نموذج التسجيل والتحقق من حالة المستخدم
+document.addEventListener('DOMContentLoaded', async function() {
+    await loadDataFromDB(); // Ensure data is loaded
+    
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+
+    // تحديث أزرار التنقل وقائمة الطالب المنسدلة
+    const authActions = document.getElementById('authActions');
+    const userDropdownArea = document.getElementById('userDropdownArea');
+    const navUserName = document.getElementById('navUserName');
+    const userPoints = document.getElementById('userPoints');
+
+    if (currentUser) {
+        if (authActions) authActions.style.display = 'none';
+        if (userDropdownArea) {
+            userDropdownArea.style.display = 'block';
+            if (navUserName) navUserName.textContent = currentUser.firstName || currentUser.name || 'طالب';
+            if (userPoints) userPoints.textContent = currentUser.balance !== undefined ? currentUser.balance : 0;
         }
+    } else {
+        if (authActions) authActions.style.display = 'flex';
+        if (userDropdownArea) userDropdownArea.style.display = 'none';
+    }
+
+    // عرض الترحيب بالبطل (Hero Banner)
+    const userGreeting = document.getElementById('userGreeting');
+    const guestGreeting = document.getElementById('guestGreeting');
+    const userNamePlaceholder = document.getElementById('userNamePlaceholder');
+
+    if (currentUser) {
+        if (guestGreeting) guestGreeting.style.display = 'none';
+        if (userGreeting) userGreeting.style.display = 'block';
+        if (userNamePlaceholder) userNamePlaceholder.textContent = currentUser.firstName || currentUser.name || 'طالب';
+    } else {
+        if (userGreeting) userGreeting.style.display = 'none';
+        if (guestGreeting) guestGreeting.style.display = 'block';
     }
 
     // عرض المعلمين
     renderTeachers();
+
+    // عرض المواد الدراسية
+    renderSubjects();
+
+    // عرض الفيديوهات المرفوعة
+    renderVideos();
+
+    // عرض الكورسات المجانية
+    renderFreeCourses();
 
     const registrationForm = document.getElementById('registrationForm');
     if (registrationForm) {
@@ -206,6 +112,53 @@ document.addEventListener('DOMContentLoaded', function() {
             gradeSelect.addEventListener('change', updateSectionVisibility);
             updateSectionVisibility();
         }
+        
+        // National ID logic
+        const nationalIdInput = document.getElementById('nationalId');
+        const birthDateInput = document.getElementById('birthDate');
+        
+        if (nationalIdInput && birthDateInput) {
+            nationalIdInput.addEventListener('input', function(e) {
+                const val = e.target.value;
+                if (val.length === 14) {
+                    const century = val.substring(0, 1);
+                    const year = val.substring(1, 3);
+                    const month = val.substring(3, 5);
+                    const day = val.substring(5, 7);
+                    
+                    let fullYear = '';
+                    if (century === '2') fullYear = '19' + year;
+                    else if (century === '3') fullYear = '20' + year;
+                    else {
+                        alert('❌ رقم قومي غير صحيح (القرن)');
+                        return;
+                    }
+                    
+                    const birthDateStr = `${fullYear}-${month}-${day}`;
+                    birthDateInput.value = birthDateStr;
+                    
+                    // Age validation
+                    const currentYear = new Date().getFullYear(); // e.g. 2026
+                    const age = currentYear - parseInt(fullYear);
+                    if (age < 10 || age > 21) {
+                        alert(`❌ سنك ${age} عاماً. المنصة مخصصة للطلاب من سن 10 إلى 21 عاماً.`);
+                        nationalIdInput.value = '';
+                        birthDateInput.value = '';
+                    }
+                } else {
+                    birthDateInput.value = '';
+                }
+            });
+        }
+    }
+    
+    // تشغيل لوحة التحكم بعد تحميل البيانات بالكامل
+    if (window.location.pathname.includes('admin.html')) {
+        populateVideoSelect();
+        displayCodes();
+        displayUsers();
+        displayAdminTeachers();
+        showSection('users');
     }
 });
 
@@ -236,9 +189,7 @@ function handleLogin(event) {
     event.preventDefault();
     const phone = document.querySelector('input[type="tel"]').value;
     const password = document.querySelector('input[type="password"]').value;
-    // مثال: أضف هذا السطر بعد نجاح تسجيل الدخول لتجربة الرصيد
-data.user.balance = 50; // افتراض أن الطالب معه 50 جنيه
-localStorage.setItem('currentUser', JSON.stringify(data.user));
+    
     // الحساب الإداري
     if (phone === '01234567890' && password === 'admin') {
         window.location.href = 'admin.html';
@@ -268,11 +219,31 @@ localStorage.setItem('currentUser', JSON.stringify(data.user));
 
 // متغير لتتبع الخطوة الحالية
 let currentStep = 1;
-
 function validateStep(step) {
     const form = document.getElementById('registrationForm');
     const currentStepElement = form.querySelector(`.form-step[data-step="${step}"]`);
     const inputs = currentStepElement.querySelectorAll('input[required], select[required]');
+
+    if (step === 1) {
+        const phone = form.querySelector('input[name="phone"]').value;
+        const parentPhone = form.querySelector('input[name="parentPhone"]').value;
+        const phoneRegex = /^01[0125]\d{8}$/;
+
+        if (!phoneRegex.test(phone)) {
+            alert('❌ رقم الهاتف غير صحيح. يجب أن يتكون من 11 رقماً ويبدأ بـ 010 أو 011 أو 012 أو 015');
+            return false;
+        }
+
+        if (!phoneRegex.test(parentPhone)) {
+            alert('❌ رقم هاتف ولي الأمر غير صحيح. يجب أن يتكون من 11 رقماً ويبدأ بـ 010 أو 011 أو 012 أو 015');
+            return false;
+        }
+        
+        if (phone === parentPhone) {
+            alert('❌ رقم هاتف الطالب لا يمكن أن يكون متطابقاً مع رقم هاتف ولي الأمر');
+            return false;
+        }
+    }
     
     if (step === 2) {
         const gradeSelect = form.querySelector('select[name="grade"]');
@@ -364,6 +335,7 @@ function handleRegister(event) {
     const birthDate = form.querySelector('input[name="birthDate"]').value;
     const phone = form.querySelector('input[name="phone"]').value;
     const parentPhone = form.querySelector('input[name="parentPhone"]').value;
+    const nationalId = form.querySelector('input[name="nationalId"]').value;
     const governorate = form.querySelector('select[name="governorate"]').value;
     const grade = form.querySelector('select[name="grade"]').value;
     const section = form.querySelector('select[name="section"]').value;
@@ -380,6 +352,7 @@ function handleRegister(event) {
             birthDate,
             phone,
             parentPhone,
+            nationalId,
             governorate,
             grade,
             section,
@@ -531,9 +504,10 @@ function deleteCode(codeId) {
       .catch(err => console.error(err));
 }
 
-function setPrice(index) {
-    if (videos[index]) {
-        document.getElementById('code-price').value = videos[index].price;
+function setPrice(videoId) {
+    const video = videos.find(v => v._id === videoId);
+    if (video) {
+        document.getElementById('code-price').value = video.price;
     }
 }
 
@@ -567,8 +541,8 @@ function displayCodes() {
                 </div>
                 <div class="code-field">
                     <label>الإجراءات:</label>
-                    <button onclick="toggleCode('${c.videoIndex}', ${c.codeIndex})">إلغاء التفعيل</button>
-                    <button onclick="deleteCode('${c.videoIndex}', ${c.codeIndex})">حذف</button>
+                    <button onclick="toggleCode('${c._id}')">إلغاء التفعيل</button>
+                    <button onclick="deleteCode('${c._id}')">حذف</button>
                 </div>
             </div>`;
         });
@@ -588,14 +562,12 @@ function displayCodes() {
                 </div>
                 <div class="code-field">
                     <label>الفيديو:</label>
-                    <select onchange="changeVideo('${c.videoIndex}', ${c.codeIndex}, this.value)">
-                        ${videos.map((v, idx) => `<option value="${idx}" ${idx == c.videoIndex ? 'selected' : ''}>${v.title}</option>`).join('')}
-                    </select>
+                    <input type="text" value="${c.videoTitle}" readonly>
                 </div>
                 <div class="code-field">
                     <label>الإجراءات:</label>
-                    <button onclick="toggleCode('${c.videoIndex}', ${c.codeIndex})">تفعيل</button>
-                    <button onclick="deleteCode('${c.videoIndex}', ${c.codeIndex})">حذف</button>
+                    <button onclick="toggleCode('${c._id}')">تفعيل</button>
+                    <button onclick="deleteCode('${c._id}')">حذف</button>
                 </div>
             </div>`;
         });
@@ -633,113 +605,190 @@ function displayUsers() {
 function populateVideoSelect() {
     const select = document.querySelector('#generate-codes select');
     if (!select) return;
-    select.innerHTML = '';
-    videos.forEach((v, i) => {
-        select.innerHTML += `<option value="${i}">${v.title}</option>`;
+    select.innerHTML = '<option value="">-- اختر فيديو --</option>';
+    videos.forEach(v => {
+        select.innerHTML += `<option value="${v._id}">${v.title}</option>`;
     });
 }
 
-function loadVideos() {
-    const latest = document.getElementById('latest-videos');
-    if (!latest) return;
-    latest.innerHTML = '<h2>احدث الفيديوهات</h2><div class="video-grid">';
-    videos.forEach(v => {
-        latest.innerHTML += `
-            <div class="video-card">
-                <img src="${v.image || 'https://via.placeholder.com/280x180?text=No+Image'}" alt="${v.title}">
-                <div class="card-content">
-                    <h3>${v.title}</h3>
-                    <div class="video-info">
-                        <span class="price">${v.price} جنيه</span>
-                        <button class="btn-red" onclick="watchVideo(${videos.indexOf(v)})">شاهد</button>
-                    </div>
-                </div>
+function renderSubjects() {
+    const wrapper = document.getElementById('subjectsWrapper');
+    const dotsContainer = document.getElementById('paginationDots');
+    if (!wrapper) return;
+    
+    // تجميع المعلمين حسب المادة الدراسية من قاعدة البيانات
+    const subjectCounts = {};
+    teachers.forEach(t => {
+        if (t.subjectAr) {
+            const sub = t.subjectAr.trim();
+            subjectCounts[sub] = (subjectCounts[sub] || 0) + 1;
+        }
+    });
+
+    const subjectsList = Object.keys(subjectCounts);
+    
+    if (subjectsList.length === 0) {
+        wrapper.innerHTML = '<p style="color: var(--gray); text-align: center; width: 100%;">لا توجد مواد دراسية مضافة حالياً.</p>';
+        if (dotsContainer) dotsContainer.innerHTML = '';
+        return;
+    }
+
+    // تعيين أيقونات افتراضية للمواد
+    const icons = ["imges/sub1.png", "imges/sub2.png", "imges/sub3.png", "imges/sub4.png", "imges/sub5.png", "imges/sub6.png"];
+
+    wrapper.innerHTML = subjectsList.map((subject, idx) => {
+        const count = subjectCounts[subject];
+        const img = icons[idx % icons.length];
+        return `
+            <div class="subject-card">
+                <img src="${img}" class="subject-img" alt="${subject}">
+                <h3>${subject}</h3>
+                <span class="teacher-count">${count} معلمين</span>
             </div>
         `;
-    });
-    latest.innerHTML += '</div>';
-}
+    }).join('');
 
-function watchVideo(index) {
-    const code = prompt('أدخل الكود للمشاهدة:');
-    if (!code) return;
-    const videoCodes = codes[index] || [];
-    const found = videoCodes.find(c => c.code === code.trim().toUpperCase());
-    if (found && found.views < 3) {
-        found.views++;
-        localStorage.setItem('codes', JSON.stringify(codes));
-        alert(`مشاهدة الفيديو. المشاهدات المتبقية: ${3 - found.views}`);
-        // Here, you can redirect to v.link or play video
-        if (videos[index].link) {
-            window.open(videos[index].link, '_blank');
-        }
-    } else {
-        alert('كود غير صحيح أو انتهت المشاهدات (3 مشاهدات كحد أقصى)');
+    // إنشاء النقط بناءً على عدد المواد
+    if (dotsContainer) {
+        dotsContainer.innerHTML = subjectsList.map((_, i) => 
+            `<span class="dot ${i === 0 ? 'active' : ''}" onclick="scrollToIndex(${i})"></span>`
+        ).join('');
     }
 }
 
-// Load on page load
-if (window.location.pathname.includes('index.html') || window.location.pathname === '/' || window.location.pathname.endsWith('/')) {
-    loadVideos();
-    setupVideoScroll();
-}
+window.scrollSubjects = function(direction) {
+    const wrapper = document.getElementById('subjectsWrapper');
+    if (!wrapper) return;
+    const scrollAmount = wrapper.clientWidth / 2;
+    wrapper.scrollBy({ left: direction * scrollAmount, behavior: 'smooth' });
+};
 
-// Setup smooth dragging for video grid
-function setupVideoScroll() {
-    const videoGrids = document.querySelectorAll('.video-grid');
-    videoGrids.forEach(grid => {
-        let isDragging = false;
-        let startX = 0;
-        let scrollLeft = 0;
-        let startTime = 0;
-        
-        grid.addEventListener('mousedown', (e) => {
-            if (e.target.tagName === 'BUTTON') return;
-            isDragging = true;
-            startX = e.pageX - grid.offsetLeft;
-            scrollLeft = grid.scrollLeft;
-            startTime = Date.now();
-            grid.style.cursor = 'grabbing';
-            e.preventDefault();
+window.scrollToIndex = function(index) {
+    const wrapper = document.getElementById('subjectsWrapper');
+    if (!wrapper) return;
+    const card = wrapper.querySelector('.subject-card');
+    if (!card) return;
+    const cardWidth = card.clientWidth + 20;
+    wrapper.scrollTo({ left: index * cardWidth, behavior: 'smooth' });
+};
+
+// تحديث النقطة النشطة عند التمرير
+document.addEventListener('DOMContentLoaded', () => {
+    const subjectsWrapper = document.getElementById('subjectsWrapper');
+    if (subjectsWrapper) {
+        subjectsWrapper.addEventListener('scroll', function() {
+            const index = Math.round(this.scrollLeft / (this.clientWidth / 2));
+            const dots = document.querySelectorAll('.dot');
+            dots.forEach((dot, i) => {
+                dot.classList.toggle('active', i === index);
+            });
         });
-        
-        grid.addEventListener('mouseleave', () => {
-            isDragging = false;
-            grid.style.cursor = 'grab';
-        });
-        
-        grid.addEventListener('mouseup', () => {
-            isDragging = false;
-            grid.style.cursor = 'grab';
-        });
-        
-        grid.addEventListener('mousemove', (e) => {
-            if (!isDragging) return;
-            e.preventDefault();
-            const x = e.pageX - grid.offsetLeft;
-            const walk = (x - startX) * 1.5;
-            grid.scrollLeft = scrollLeft - walk;
-        });
-        
-        // Touch support for mobile
-        grid.addEventListener('touchstart', (e) => {
-            startX = e.touches[0].pageX - grid.offsetLeft;
-            scrollLeft = grid.scrollLeft;
-        });
-        
-        grid.addEventListener('touchmove', (e) => {
-            if (e.touches.length > 1) return;
-            const x = e.touches[0].pageX - grid.offsetLeft;
-            const walk = (x - startX) * 1.5;
-            grid.scrollLeft = scrollLeft - walk;
-        });
+    }
+});
+
+function watchVideo(videoId) {
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    if (!currentUser) {
+        alert('يرجى تسجيل الدخول أولاً');
+        window.location.href = 'login.html';
+        return;
+    }
+
+    const code = prompt('أدخل كود الشحن للمشاهدة:');
+    if (!code) return;
+
+    fetch(`${API_URL}/api/codes/verify`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ codeStr: code.trim().toUpperCase(), videoId, studentId: currentUser._id })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            alert(`✅ كود صحيح! المشاهدات المتبقية: ${data.remainingViews}`);
+            // Redirect to secure watch page with ID and Code
+            window.location.href = `watch.html?videoId=${videoId}&code=${data.code.code}`;
+        } else {
+            alert('❌ ' + data.message);
+        }
+    })
+    .catch(err => {
+        alert('❌ خطأ في الاتصال بالسيرفر');
+        console.error(err);
     });
 }
-if (window.location.pathname.includes('admin.html')) {
-    populateVideoSelect();
-    displayCodes();
-    displayUsers();
-    showSection('users');
+
+
+
+
+function displayAdminTeachers() {
+    const list = document.getElementById('teachers-list-admin');
+    if (!list) return;
+    list.innerHTML = '<h4>المعلمون المضافون</h4>';
+    if (teachers.length === 0) {
+        list.innerHTML += '<p>لا يوجد معلمون.</p>';
+        return;
+    }
+    teachers.forEach(t => {
+        list.innerHTML += `<div style="border:1px solid #ccc; padding:10px; margin-bottom:10px; border-radius:5px;">
+            <strong>${t.name}</strong> - ${t.subjectAr}
+            <button onclick="deleteTeacher('${t._id}')" class="btn-red" style="float:left; padding:5px 10px;">حذف</button>
+        </div>`;
+    });
+}
+
+function handleAddTeacher(event) {
+    event.preventDefault();
+    const name = document.getElementById('teacher-name').value;
+    const subjectAr = document.getElementById('teacher-subject').value;
+    const bio = document.getElementById('teacher-bio').value;
+    
+    // Collect selected grades from checkboxes
+    const checkedBoxes = document.querySelectorAll('input[name="teacher-grades-check"]:checked');
+    const gradesArray = Array.from(checkedBoxes).map(cb => cb.value);
+    if (gradesArray.length === 0) {
+        alert('❌ يرجى اختيار صف دراسي واحد على الأقل للمعلم');
+        return;
+    }
+    const grades = gradesArray.join(',');
+    
+    const imageFile = document.getElementById('teacher-image').files[0];
+
+    const formData = new FormData();
+    formData.append('name', name);
+    formData.append('subjectAr', subjectAr);
+    formData.append('bio', bio);
+    formData.append('grades', grades);
+    if (imageFile) formData.append('image', imageFile);
+
+    fetch(`${API_URL}/api/teachers`, {
+        method: 'POST',
+        body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+        if(data.success) {
+            alert('تم إضافة المعلم بنجاح');
+            event.target.reset();
+            loadDataFromDB().then(() => displayAdminTeachers());
+        } else {
+            alert('خطأ في إضافة المعلم: ' + (data.message || ''));
+        }
+    }).catch(err => {
+        console.error(err);
+        alert('خطأ في الاتصال بالسيرفر. يرجى التأكد من أن السيرفر يعمل وقاعدة البيانات متصلة.');
+    });
+}
+
+function deleteTeacher(id) {
+    if(!confirm('تأكيد الحذف؟')) return;
+    fetch(`${API_URL}/api/teachers/${id}`, { method: 'DELETE' })
+    .then(res => res.json())
+    .then(data => {
+        if(data.success) {
+            loadDataFromDB().then(() => displayAdminTeachers());
+        }
+    });
 }
 
 function showSection(section) {
@@ -748,7 +797,8 @@ function showSection(section) {
         'codes': 'codes-list',
         'online': 'online-list',
         'add-video': 'add-video',
-        'generate-codes': 'generate-codes'
+        'generate-codes': 'generate-codes',
+        'teachers': 'teachers-section'
     };
     const sections = Object.values(sectionMap);
     sections.forEach(s => {
@@ -756,7 +806,13 @@ function showSection(section) {
         if (el) el.style.display = s === sectionMap[section] ? 'block' : 'none';
     });
     document.querySelectorAll('.sidebar button').forEach(btn => btn.classList.remove('active'));
-    event.target.classList.add('active');
+    
+    if (typeof event !== 'undefined' && event && event.target) {
+        event.target.classList.add('active');
+    } else {
+        const btn = Array.from(document.querySelectorAll('.sidebar button')).find(b => b.getAttribute('onclick')?.includes(`'${section}'`));
+        if (btn) btn.classList.add('active');
+    }
 }
 // عرض المعلمين في الصفحة الرئيسية
 // وظيفة عرض المعلمين مع نظام الحركة المستمرة والسحب اليدوي
@@ -764,15 +820,15 @@ function renderTeachers() {
     const teachersGrid = document.getElementById('teachersGrid');
     if (!teachersGrid) return;
 
-    const teachers = [...teachersData];
-    if (teachers.length === 0) return;
+    const teachersList = [...teachers];
+    if (teachersList.length === 0) return;
 
     // 1. توليد محتوى الكروت
-    const cardsHTML = teachers.map(teacher => `
+    const cardsHTML = teachersList.map(teacher => `
         <div class="teacher-card">
             <div class="teacher-avatar-container">
                 <div class="teacher-avatar">
-                    <img src="${teacher.image}" alt="${teacher.name}" onerror="this.onerror=null;this.src='imges/1.png';">
+                    <img src="${teacher.imagePath || 'imges/1.png'}" alt="${teacher.name}" onerror="this.onerror=null;this.src='imges/1.png';">
                 </div>
             </div>
             <h3 class="teacher-name">${teacher.name}</h3>
@@ -780,7 +836,7 @@ function renderTeachers() {
             <p class="teacher-bio">${teacher.bio}</p>
             <div class="teacher-stats">
                 <div class="teacher-stat">
-                    <span class="teacher-stat-number">${teacher.students}</span>
+                    <span class="teacher-stat-number">${teacher.studentsCount || 0}</span>
                     <span class="teacher-stat-label">طالب</span>
                 </div>
                 <div class="teacher-stat">
@@ -792,156 +848,152 @@ function renderTeachers() {
         </div>
     `).join('');
 
-    // 2. مضاعفة المحتوى مرتين لضمان حلقة وصل لا نهائية (Infinite Loop)
-    teachersGrid.innerHTML = cardsHTML + cardsHTML;
+    // 2. التحقق من عدد المعلمين لتحديد ما إذا كنا سنفعل الحركة الدائرية اللانهائية
+    if (teachersList.length > 2) {
+        teachersGrid.innerHTML = cardsHTML + cardsHTML;
 
-    // 3. إعداد متغيرات الحركة
-    let scrollPos = 0;
-    let isDragging = false;
-    let startX = 0;
-    let currentScrollLeft = 0;
-    let speed = 0.8; // سرعة الحركة التلقائية (يمكنك زيادتها)
+        // 3. إعداد متغيرات الحركة
+        let scrollPos = 0;
+        let isDragging = false;
+        let startX = 0;
+        let currentScrollLeft = 0;
+        let speed = 0.8; // سرعة الحركة التلقائية
 
-    // وظيفة التحريك المستمر
-    function animate() {
-        if (!isDragging) {
-            scrollPos += speed;
-            
-            // إعادة التموضع عند الوصول لمنتصف المحتوى (نهاية النسخة الأولى)
-            // هذا هو السر في جعل الـ Loop غير منقطع
-            if (scrollPos >= teachersGrid.scrollWidth / 2) {
-                scrollPos = 0;
+        // وظيفة التحريك المستمر
+        function animate() {
+            if (!isDragging) {
+                scrollPos += speed;
+                
+                // إعادة التموضع عند الوصول لمنتصف المحتوى
+                if (scrollPos >= teachersGrid.scrollWidth / 2) {
+                    scrollPos = 0;
+                }
+                teachersGrid.scrollLeft = scrollPos;
             }
-            teachersGrid.scrollLeft = scrollPos;
+            requestAnimationFrame(animate);
         }
+
+        // ابدأ الحركة
         requestAnimationFrame(animate);
-    }
 
-    // ابدأ الحركة
-    requestAnimationFrame(animate);
+        // --- أحداث الماوس واللمس للسحب اليدوي ---
+        const startDragging = (e) => {
+            isDragging = true;
+            teachersGrid.style.cursor = 'grabbing';
+            startX = (e.pageX || e.touches[0].pageX) - teachersGrid.offsetLeft;
+            currentScrollLeft = teachersGrid.scrollLeft;
+        };
 
-    // --- أحداث الماوس واللمس للسحب اليدوي ---
+        const stopDragging = () => {
+            isDragging = false;
+            teachersGrid.style.cursor = 'grab';
+            scrollPos = teachersGrid.scrollLeft;
+        };
 
-    const startDragging = (e) => {
-        isDragging = true;
-        teachersGrid.style.cursor = 'grabbing';
-        startX = (e.pageX || e.touches[0].pageX) - teachersGrid.offsetLeft;
-        currentScrollLeft = teachersGrid.scrollLeft;
-    };
+        const move = (e) => {
+            if (!isDragging) return;
+            e.preventDefault();
+            const x = (e.pageX || e.touches[0].pageX) - teachersGrid.offsetLeft;
+            const walk = (x - startX) * 1.5;
+            teachersGrid.scrollLeft = currentScrollLeft - walk;
+            scrollPos = teachersGrid.scrollLeft;
+        };
 
-    const stopDragging = () => {
-        isDragging = false;
+        // إضافة المستمعات
+        teachersGrid.addEventListener('mousedown', startDragging);
+        teachersGrid.addEventListener('mousemove', move);
+        window.addEventListener('mouseup', stopDragging);
+
+        teachersGrid.addEventListener('touchstart', startDragging, { passive: true });
+        teachersGrid.addEventListener('touchmove', move, { passive: false });
+        teachersGrid.addEventListener('touchend', stopDragging);
+        
         teachersGrid.style.cursor = 'grab';
-        // تحديث وضع التمرير ليتماشى مع المكان الذي تركه المستخدم
-        scrollPos = teachersGrid.scrollLeft;
-    };
-
-    const move = (e) => {
-        if (!isDragging) return;
-        e.preventDefault();
-        const x = (e.pageX || e.touches[0].pageX) - teachersGrid.offsetLeft;
-        const walk = (x - startX) * 1.5; // سرعة الاستجابة للسحب
-        teachersGrid.scrollLeft = currentScrollLeft - walk;
-        scrollPos = teachersGrid.scrollLeft; // تحديث الموقع برمجياً
-    };
-
-    // إضافة المستمعات
-    teachersGrid.addEventListener('mousedown', startDragging);
-    teachersGrid.addEventListener('mousemove', move);
-    window.addEventListener('mouseup', stopDragging);
-
-    teachersGrid.addEventListener('touchstart', startDragging);
-    teachersGrid.addEventListener('touchmove', move);
-    teachersGrid.addEventListener('touchend', stopDragging);
+    } else {
+        // إذا كان هناك معلم واحد أو اثنين فقط، نعرضهم بشكل ثابت ومنسق في المنتصف
+        teachersGrid.innerHTML = cardsHTML;
+        teachersGrid.style.display = 'flex';
+        teachersGrid.style.justifyContent = 'center';
+        teachersGrid.style.gap = '20px';
+    }
 }
 
-const subjectsData = [
-    { name: "صيدله", teachers: 1, img: "imges/sub1.png" },
-    { name: "Integrated Science", teachers: 1, img: "imges/sub2.png" },
-    { name: "bue", teachers: 1, img: "imges/sub3.png" },
-    { name: "جغرافيا", teachers: 0, img: "imges/sub4.png" },
-    { name: "لغة عربية", teachers: 5, img: "imges/sub5.png" },
-    { name: "ASU LEVEL 1 general", teachers: 2, img: "imges/sub6.png" },
-    { name: "كيمياء", teachers: 3, img: "imges/sub1.png" },
-    { name: "فيزياء", teachers: 4, img: "imges/sub2.png" }
-];
-
-function renderSubjects() {
-    const wrapper = document.getElementById('subjectsWrapper');
-    const dotsContainer = document.getElementById('paginationDots');
-    if (!wrapper) return;
-
-    wrapper.innerHTML = subjectsData.map(sub => `
-        <div class="subject-card">
-            <img src="${sub.img}" class="subject-img" alt="${sub.name}">
-            <h3>${sub.name}</h3>
-            <span class="teacher-count">${sub.teachers} معلمين</span>
-        </div>
-    `).join('');
-
-    // إنشاء النقط بناءً على عدد المواد
-    dotsContainer.innerHTML = subjectsData.map((_, i) => 
-        `<span class="dot ${i === 0 ? 'active' : ''}" onclick="scrollToIndex(${i})"></span>`
-    ).join('');
-}
-
-function scrollSubjects(direction) {
-    const wrapper = document.getElementById('subjectsWrapper');
-    const scrollAmount = wrapper.clientWidth / 2;
-    wrapper.scrollBy({ left: direction * scrollAmount, behavior: 'smooth' });
-}
-
-function scrollToIndex(index) {
-    const wrapper = document.getElementById('subjectsWrapper');
-    const cardWidth = wrapper.querySelector('.subject-card').clientWidth + 20;
-    wrapper.scrollTo({ left: index * cardWidth, behavior: 'smooth' });
-}
-
-// تحديث النقطة النشطة عند التمرير
-document.getElementById('subjectsWrapper')?.addEventListener('scroll', function() {
-    const wrapper = this;
-    const index = Math.round(wrapper.scrollLeft / (wrapper.clientWidth / 2));
-    const dots = document.querySelectorAll('.dot');
-    dots.forEach((dot, i) => {
-        dot.classList.toggle('active', i === index);
+function exportCodes(videoId) {
+    const videoCodes = codes.filter(c => c.videoId === videoId);
+    if (!videoCodes || videoCodes.length === 0) {
+        alert("لا توجد أكواد لهذا الفيديو لتصديرها.");
+        return;
+    }
+    let csvContent = "data:text/csv;charset=utf-8,\uFEFF"; // BOM for Arabic
+    csvContent += "الكود,القيمة,الفيديو,الحالة,المشاهدات\n";
+    videoCodes.forEach(c => {
+        const status = c.used ? "مستعمل" : "غير مستعمل";
+        csvContent += `${c.code},${c.value},"${c.videoTitle}",${status},${c.views}/3\n`;
     });
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", `codes_${Date.now()}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
+
+// تسجيل الخروج
+function handleLogout() {
+    localStorage.removeItem('currentUser');
+    window.location.href = 'index.html';
+}
+
+// قائمة المستخدم المنسدلة
+window.toggleUserMenu = function() {
+    const userMenu = document.getElementById('userMenu');
+    if (userMenu) {
+        userMenu.classList.toggle('show');
+    }
+};
+
+window.addEventListener('click', function(e) {
+    if (!e.target.closest('#userDropdownArea')) {
+        const userMenu = document.getElementById('userMenu');
+        if (userMenu) userMenu.classList.remove('show');
+    }
 });
 
-// تشغيل الوظيفة
-document.addEventListener('DOMContentLoaded', renderSubjects);
+// عرض الفيديوهات المرفوعة ديناميكياً
+function renderVideos() {
+    const container = document.getElementById('latest-videos');
+    const section = document.getElementById('latest-videos-section');
+    if (!container) return;
+
+    if (videos.length === 0) {
+        if (section) section.style.display = 'none';
+        container.innerHTML = '<p style="color: var(--gray); text-align: center; width: 100%;">لا توجد محاضرات متاحة حالياً.</p>';
+        return;
+    }
+
+    if (section) section.style.display = 'block';
+
+    container.innerHTML = videos.map(video => {
+        return `
+            <div class="course-card" style="flex: 0 0 320px;">
+                <img src="${video.image || 'imges/st.jpg'}" class="course-thumb" alt="${video.title}" onerror="this.onerror=null;this.src='imges/st.jpg';">
+                <div class="course-body">
+                    <h3 class="course-title">${video.title}</h3>
+                    <div class="course-price">${video.price || 0} ج.م</div>
+                    <div class="course-btns">
+                        <button class="btn-join" onclick="watchVideo('${video._id}')">مشاهدة المحاضرة !</button>
+                    </div>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
 
 // بيانات الكورسات المجانية
 const freeCoursesData = [
     {
         title: "كورس الشهر الثالث- الكيمياء العضوية - عام",
-        price: "مجاني",
-        image: "imges/st2.jpg", // استبدل بصورة حقيقية
-        date: "الأربعاء، ١٨ مارس ٢٠٢٦",
-        chapter: "الباب الخامس"
-    },
-    {
-        title: "كورس الترم الثاني كاملاً - 2 ث",
-        price: "مجاني",
-        image: "imges/st.jpg",
-        date: "الخميس، ٢٩ يناير ٢٠٢٦",
-        chapter: "أول محاضرة بداية من يوم 2/8"
-    },
-    {
-        title: "كورس الشهر الثالث- الكيمياء العضوية - ازهر",
-        price: "مجاني",
-        image: "imges/st2.jpg",
-        date: "الأربعاء، ١٨ مارس ٢٠٢٦",
-        chapter: "الباب الخامس"
-    },
-    {
-        title: "كورس الترم الثاني كاملاً - 2 ث",
-        price: "مجاني",
-        image: "imges/st.jpg",
-        date: "الخميس، ٢٩ يناير ٢٠٢٦",
-        chapter: "أول محاضرة بداية من يوم 2/8"
-    },
-    {
-        title: "كورس الشهر الثالث- الكيمياء العضوية - ازهر",
         price: "مجاني",
         image: "imges/st2.jpg",
         date: "الأربعاء، ١٨ مارس ٢٠٢٦",
@@ -982,59 +1034,43 @@ function renderFreeCourses() {
                 <h3 class="course-title">${course.title}</h3>
                 <div class="course-price">${course.price}</div>
                 <div class="course-meta">
-                    <div class="meta-item"><i class="far fa-calendar-alt"></i> ${course.date}</div>
-                    <div class="meta-item"><i class="fas fa-book-open"></i> ${course.chapter}</div>
+                    <div class="meta-item">📅 ${course.date}</div>
+                    <div class="meta-item">📖 ${course.chapter}</div>
                 </div>
                 <div class="course-btns">
-                    <button class="btn-enter">الدخول للكورس</button>
-                    <button class="btn-join">الإشتراك في الكورس !</button>
+                    <button class="btn-enter" onclick="alert('كورس مجاني - متاح للمشاهدة المباشرة')">الدخول للكورس</button>
+                    <button class="btn-join" onclick="alert('أنت مشترك بالفعل في هذا الكورس المجاني!')">مشترك بالفعل !</button>
                 </div>
             </div>
         </div>
     `).join('');
 
-    // إنشاء النقط
-    dotsContainer.innerHTML = freeCoursesData.map((_, i) => 
-        `<span class="c-dot ${i === 0 ? 'active' : ''}" onclick="jumpToCourse(${i})"></span>`
-    ).join('');
-}
-
-// وظيفة تحريك الشريط بالأسهم
-window.scrollCourses = (direction) => {
-    const wrapper = document.getElementById('freeCoursesWrapper');
-    const scrollAmount = 375; // عرض الكارت + الفجوة
-    wrapper.scrollBy({ left: -direction * scrollAmount, behavior: 'smooth' });
-    setTimeout(updateCourseDots, 500);
-}
-
-function updateCourseDots() {
-    const wrapper = document.getElementById('freeCoursesWrapper');
-    const dots = document.querySelectorAll('.c-dot');
-    const index = Math.round(wrapper.scrollLeft / -375);
-    dots.forEach((dot, i) => dot.classList.toggle('active', i === index));
-}
-
-// استدعاء الوظيفة عند التحميل
-document.addEventListener('DOMContentLoaded', renderFreeCourses);
-
-
-function updateHeroDisplay() {
-    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-    const userGreeting = document.getElementById('userGreeting');
-    const guestGreeting = document.getElementById('guestGreeting');
-    const userNamePlaceholder = document.getElementById('userNamePlaceholder');
-
-    if (currentUser) {
-        // حالة مسجل دخول: أهلاً بك + اسم الطالب
-        guestGreeting.style.display = 'none';
-        userGreeting.style.display = 'block';
-        userNamePlaceholder.textContent = currentUser.firstName;
-    } else {
-        // حالة غير مسجل: منصة مَســـار فقط
-        userGreeting.style.display = 'none';
-        guestGreeting.style.display = 'block';
+    if (dotsContainer) {
+        dotsContainer.innerHTML = freeCoursesData.map((_, i) => 
+            `<span class="c-dot ${i === 0 ? 'active' : ''}" onclick="jumpToCourse(${i})"></span>`
+        ).join('');
     }
 }
 
-// استدعي الوظيفة عند التحميل
-document.addEventListener('DOMContentLoaded', updateHeroDisplay);
+window.scrollCourses = function(direction) {
+    const wrapper = document.getElementById('freeCoursesWrapper');
+    if (!wrapper) return;
+    const scrollAmount = 375;
+    wrapper.scrollBy({ left: -direction * scrollAmount, behavior: 'smooth' });
+    setTimeout(updateCourseDots, 500);
+};
+
+window.jumpToCourse = function(index) {
+    const wrapper = document.getElementById('freeCoursesWrapper');
+    if (!wrapper) return;
+    wrapper.scrollTo({ left: index * -375, behavior: 'smooth' });
+    setTimeout(updateCourseDots, 500);
+};
+
+function updateCourseDots() {
+    const wrapper = document.getElementById('freeCoursesWrapper');
+    if (!wrapper) return;
+    const dots = document.querySelectorAll('.c-dot');
+    const index = Math.round(wrapper.scrollLeft / -375);
+    dots.forEach((dot, i) => dot.classList.toggle('active', i === index));
+}

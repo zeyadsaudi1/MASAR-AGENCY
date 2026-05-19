@@ -1,0 +1,7 @@
+node_modules/
+.env
+uploads/
+security-reports.json
+.antigravity/
+.gemini/
+*.log

@@ -99,5 +99,81 @@
 
     <script src="script.js" defer></script>
     <script src="video-security.js" defer></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const API_URL = window.location.origin;
+            const urlParams = new URLSearchParams(window.location.search);
+            const videoId = urlParams.get('videoId');
+            const codeStr = urlParams.get('code');
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+
+            if (!currentUser || !videoId || !codeStr) {
+                alert('عذراً، يجب تسجيل الدخول وإدخال كود صحيح لمشاهدة المحاضرة.');
+                window.location.href = 'index.html';
+                return;
+            }
+
+            try {
+                // عرض مؤشر التحميل
+                const loadingOverlay = document.getElementById('loadingOverlay');
+                if (loadingOverlay) loadingOverlay.style.display = 'flex';
+
+                // 1. التحقق من كود الشحن
+                const verifyRes = await fetch(`${API_URL}/api/codes/verify`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ codeStr: codeStr.trim().toUpperCase(), videoId, studentId: currentUser._id })
+                });
+
+                const verifyData = await verifyRes.json();
+                if (!verifyRes.ok || !verifyData.success) {
+                    alert(verifyData.message || 'فشل التحقق من الكود');
+                    window.location.href = 'index.html';
+                    return;
+                }
+
+                // 2. جلب معلومات الفيديو
+                const videoRes = await fetch(`${API_URL}/api/videos/${videoId}`);
+                const videoData = await videoRes.json();
+
+                if (!videoRes.ok || !videoData.success) {
+                    alert('خطأ في جلب بيانات الفيديو');
+                    window.location.href = 'index.html';
+                    return;
+                }
+
+                const video = videoData.video;
+
+                // 3. تشغيل الفيديو في المشغل الآمن
+                const videoElement = document.getElementById('secureVideo');
+                if (videoElement) {
+                    // إذا كان مسار فيديو مرفوع محلياً
+                    if (video.videoPath) {
+                        videoElement.src = `${API_URL}${video.videoPath}`;
+                    } else if (video.link) {
+                        // إذا كان رابط خارجي
+                        videoElement.src = video.link;
+                    }
+                    videoElement.load();
+                }
+
+                // تحديث البيانات في الصفحة
+                const videoTitleEl = document.getElementById('videoTitle');
+                if (videoTitleEl) videoTitleEl.textContent = video.title;
+
+                const remainingViewsEl = document.getElementById('remainingViews');
+                if (remainingViewsEl) {
+                    remainingViewsEl.textContent = 3 - verifyData.code.views;
+                }
+
+                if (loadingOverlay) loadingOverlay.style.display = 'none';
+
+            } catch (err) {
+                console.error(err);
+                alert('حدث خطأ أثناء تحميل المحاضرة');
+                window.location.href = 'index.html';
+            }
+        });
+    </script>
 </body>
 </html>

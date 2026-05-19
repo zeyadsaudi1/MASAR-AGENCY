@@ -9,10 +9,10 @@
     'use strict';
 
     // ─── Configuration ───
-    const API_URL = 'http://localhost:3000';
+    const API_URL = window.location.origin;
     const currentUser = JSON.parse(localStorage.getItem('currentUser')) || {};
     const currentUserId = currentUser.phone || 'unknown';
-    const currentVideoId = new URLSearchParams(window.location.search).get('v') || 'unknown';
+    const currentVideoId = new URLSearchParams(window.location.search).get('videoId') || 'unknown';
 
     let violationCount = 0;
     let videoElement = null;
