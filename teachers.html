@@ -21,11 +21,29 @@
                     <button class="icon-btn theme-switcher" data-theme="dark" aria-label="وضع الظلام">🌙</button>
                 </div>
             </div>
-            <nav class="header-actions">
-                <a href="index.html" class="btn-outline">الرئيسية</a>
-                <a href="login.html" class="btn-outline">تسجيل الدخول</a>
-                <a href="register.html" class="btn-fill">حساب جديد</a>
-            </nav>
+           <nav class="header-actions" id="authActions">
+    <!-- سيتم تبديل هذا المحتوى بواسطة JavaScript -->
+    <a href="login.html" class="btn-outline">تسجيل الدخول</a>
+    <a href="register.html" class="btn-fill">حساب جديد</a>
+</nav>
+
+<!-- إضافة قائمة المستخدم (تكون مخفية افتراضياً) -->
+<div class="user-dropdown-container" id="userDropdownArea" style="display: none;">
+    <button class="user-menu-btn" onclick="toggleUserMenu()">
+        <span id="navUserName">الطالب</span>
+        <div class="user-icon-circle">👤</div>
+    </button>
+    
+    <div class="user-dropdown-menu" id="userMenu">
+        <a href="profile.html" class="menu-item">👤 البروفايل</a>
+        <div class="menu-item balance-item">
+            <span>💰 الرصيد (النقط):</span>
+            <span id="userPoints">0</span> ج.م
+        </div>
+        <hr>
+        <button onclick="handleLogout()" class="menu-item logout-btn">🚪 تسجيل خروج</button>
+    </div>
+</div>
         </div>
     </header>
 
