@@ -2109,3 +2109,96 @@ header {
     background: #ffe3e3;
     color: #e63946;
 }
+
+/*
+    ===================================================
+    ✅ بروفايل الطالب - مودرن
+    =================================================== */  
+
+/* --- Royal Glass Dashboard Fixes --- */
+:root {
+    --glass-bg: rgba(255, 255, 255, 0.75);
+    --glass-border: rgba(255, 255, 255, 0.4);
+    --accent-gold: #dda852;
+}
+
+.dark-mode {
+    --glass-bg: rgba(15, 22, 28, 0.85);
+    --glass-border: rgba(255, 255, 255, 0.05);
+}
+
+.royal-dashboard { background: #f0f4f8; transition: 0.3s; overflow-x: hidden; }
+.dark-mode.royal-dashboard { background: #080a0f; }
+
+/* Background Animation */
+.vortex-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; overflow: hidden; }
+.shape { position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.3; animation: vortex 15s infinite alternate ease-in-out; }
+.s1 { width: 500px; height: 500px; background: var(--accent-gold); top: -10%; left: -10%; }
+.s2 { width: 400px; height: 400px; background: #00f2ff; bottom: -5%; right: -5%; }
+.s3 { width: 300px; height: 300px; background: #ff3e6c; top: 40%; left: 30%; }
+@keyframes vortex { from { transform: translate(0,0); } to { transform: translate(10%, 10%); } }
+
+/* Layout Grid */
+.royal-wrapper { display: grid; grid-template-columns: 260px 1fr; gap: 25px; padding: 30px 5%; margin-top: 10px; }
+
+/* Sidebar */
+.royal-sidebar {
+    background: var(--glass-bg); backdrop-filter: blur(20px); border: 1px solid var(--glass-border);
+    border-radius: 30px; padding: 30px 15px; height: fit-content; position: sticky; top: 120px;
+}
+.sidebar-user-header { text-align: center; margin-bottom: 25px; }
+.avatar-container { position: relative; width: 90px; height: 90px; margin: 0 auto 12px; }
+.sidebar-avatar { width: 100%; height: 100%; border-radius: 20px; border: 3px solid var(--accent-gold); object-fit: cover; }
+.online-pulse { position: absolute; bottom: -5px; right: -5px; width: 18px; height: 18px; background: #2ca772; border: 3px solid var(--glass-bg); border-radius: 50%; }
+
+.sidebar-nav { display: flex; flex-direction: column; gap: 6px; }
+.side-item {
+    width: 100%; padding: 14px 18px; border: none; background: transparent; color: var(--gray);
+    border-radius: 15px; cursor: pointer; display: flex; align-items: center; gap: 12px;
+    font-weight: 700; transition: 0.3s; font-size: 0.95rem; text-align: right;
+}
+.side-item:hover { background: rgba(0,0,0,0.03); }
+.side-item.active { background: #13201c; color: var(--accent-gold); }
+.dark-mode .side-item.active { background: var(--accent-gold); color: #000; }
+
+/* Main Content Area */
+.royal-content { background: var(--glass-bg); backdrop-filter: blur(20px); border: 1px solid var(--glass-border); border-radius: 35px; padding: 35px; min-height: 600px; }
+.glass-section-title { border-bottom: 2px solid var(--glass-border); margin-bottom: 25px; padding-bottom: 10px; }
+.glass-section-title h3 { font-size: 1.4rem; color: var(--text-dark); display: flex; align-items: center; gap: 10px; margin: 0; }
+
+/* Circular Progress Stats */
+.dynamic-stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 25px; }
+.stat-progress-item { display: flex; flex-direction: column; align-items: center; text-align: center; }
+.circular-progress { position: relative; width: 110px; height: 110px; margin-bottom: 12px; }
+.circular-progress svg { width: 110px; height: 110px; transform: rotate(-90deg); }
+.circular-progress circle { fill: none; stroke-width: 8; stroke-linecap: round; }
+.circular-progress .bg { stroke: rgba(0,0,0,0.05); }
+.dark-mode .circular-progress .bg { stroke: rgba(255,255,255,0.05); }
+.circular-progress .progress { stroke-dasharray: 283; stroke-dashoffset: 283; transition: 1.5s cubic-bezier(0.4, 0, 0.2, 1); }
+.blue .progress { stroke: #3b82f6; } .pink .progress { stroke: #ec4899; } .gold .progress { stroke: var(--accent-gold); }
+.circular-progress .content { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); display: flex; align-items: baseline; color: var(--text-dark); }
+.circular-progress .content h2 { font-size: 1.6rem; font-weight: 800; margin: 0; }
+
+/* User Info Display */
+.user-info-display { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 35px; }
+.info-item { background: rgba(0,0,0,0.02); padding: 15px 20px; border-radius: 15px; border: 1px solid var(--glass-border); }
+.info-item span { display: block; font-size: 0.85rem; color: var(--gray); margin-bottom: 3px; }
+.info-item b { font-size: 1.05rem; color: var(--text-dark); }
+
+/* Other Styles */
+.empty-state-royal { text-align: center; padding: 80px 20px; color: var(--gray); opacity: 0.5; }
+.empty-state-royal i { font-size: 3.5rem; margin-bottom: 15px; }
+.filter-controls { display: flex; gap: 15px; margin-bottom: 25px; }
+.filter-controls select { flex: 1; height: 48px; border-radius: 12px; border: 1px solid var(--glass-border); background: var(--glass-bg); padding: 0 10px; color: var(--text-dark); }
+
+/* Recharge Box */
+.input-glow-row { display: flex; gap: 15px; max-width: 600px; margin: 0 auto; }
+.input-glow-row input { flex: 1; height: 55px; border-radius: 15px; border: 2px solid #ddd; background: rgba(255,255,255,0.5); padding: 0 20px; font-size: 1.1rem; }
+.btn-royal-action { padding: 0 30px; background: #13201c; color: var(--accent-gold); border-radius: 15px; font-weight: 800; cursor: pointer; }
+
+@media (max-width: 900px) {
+    .royal-wrapper { grid-template-columns: 1fr; }
+    .royal-sidebar { position: static; height: auto; }
+    .sidebar-nav { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .dynamic-stats-row, .user-info-display { grid-template-columns: 1fr; }
+}

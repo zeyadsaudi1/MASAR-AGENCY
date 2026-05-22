@@ -1,252 +1,162 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
-    <title>الملف الشخصي - MASAR</title>
-    <style>
-        .profile-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 80vh;
-            padding: 40px 20px;
-            background: linear-gradient(135deg, var(--bg) 0%, var(--surface-alt) 100%);
-            direction: rtl;
-        }
-
-        .profile-card {
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(16px) saturate(180%);
-            -webkit-backdrop-filter: blur(16px) saturate(180%);
-            border: 1px solid rgba(255, 255, 255, 0.25);
-            border-radius: 30px;
-            padding: 40px;
-            width: 100%;
-            max-width: 600px;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.05);
-            transition: all 0.3s ease;
-        }
-
-        .dark-mode .profile-card {
-            background: rgba(26, 37, 39, 0.75);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
-        }
-
-        .profile-header {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 35px;
-            border-bottom: 2px solid rgba(0, 0, 0, 0.05);
-            padding-bottom: 25px;
-        }
-
-        .dark-mode .profile-header {
-            border-bottom-color: rgba(255, 255, 255, 0.05);
-        }
-
-        .profile-avatar-large {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--primary-green) 0%, #2ca772 100%);
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 3rem;
-            box-shadow: 0 10px 25px rgba(44, 167, 114, 0.3);
-        }
-
-        .profile-title {
-            font-size: 1.8rem;
-            font-weight: 800;
-            color: var(--text-dark);
-            margin: 0;
-        }
-
-        .profile-role-badge {
-            background: rgba(221, 168, 82, 0.15);
-            color: #dda852;
-            padding: 6px 16px;
-            border-radius: 99px;
-            font-size: 0.9rem;
-            font-weight: 700;
-        }
-
-        .profile-details {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-        }
-
-        @media (max-width: 600px) {
-            .profile-details {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .detail-item {
-            background: rgba(0, 0, 0, 0.02);
-            border: 1px solid rgba(0, 0, 0, 0.03);
-            border-radius: 16px;
-            padding: 16px 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-
-        .dark-mode .detail-item {
-            background: rgba(255, 255, 255, 0.02);
-            border-color: rgba(255, 255, 255, 0.04);
-        }
-
-        .detail-label {
-            font-size: 0.85rem;
-            color: var(--gray);
-            font-weight: 600;
-        }
-
-        .detail-value {
-            font-size: 1.1rem;
-            color: var(--text-dark);
-            font-weight: 700;
-        }
-
-        .profile-actions {
-            margin-top: 35px;
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-        }
-
-        .profile-btn {
-            padding: 12px 30px;
-            border-radius: 12px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            text-align: center;
-            font-size: 1rem;
-        }
-    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>لوحة التحكم | مَسار</title>
 </head>
-<body>
+<body class="royal-dashboard">
+
+    <!-- الخلفية المتحركة -->
+    <div class="vortex-bg">
+        <div class="shape s1"></div><div class="shape s2"></div><div class="shape s3"></div>
+    </div>
+
+    <!-- النافبار الأصلية الخاصة بك -->
     <header>
         <div class="header-inner">
             <div class="header-left">
                 <div class="logo">
                     <span class="logo-mark">
-                        <img class="logo-dark" src="imges/logo.png" alt="MASAR Logo dark">
-                        <img class="logo-light" src="imges/logo2.png" alt="MASAR Logo light">
+                        <img class="logo-dark" src="imges/logo.png" alt="MASAR Logo">
+                        <img class="logo-light" src="imges/logo2.png" alt="MASAR Logo">
                     </span>
                     <span>MASAR-مَســـار</span>
                 </div>
                 <div class="header-icons">
-                    <button class="icon-btn theme-switcher" data-theme="light" aria-label="وضع النهار">☀</button>
-                    <button class="icon-btn theme-switcher" data-theme="dark" aria-label="وضع الظلام">🌙</button>
+                    <button class="icon-btn theme-switcher" data-theme="light">☀</button>
+                    <button class="icon-btn theme-switcher" data-theme="dark">🌙</button>
                 </div>
             </div>
             <nav class="header-actions">
                 <a href="index.html" class="btn-outline">الرئيسية</a>
-                <button onclick="handleLogout()" class="btn-fill">تسجيل خروج</button>
+                <button onclick="handleLogout()" class="btn-fill">خروج</button>
             </nav>
         </div>
     </header>
 
-    <div class="profile-container">
-        <div class="profile-card">
-            <div class="profile-header">
-                <div class="profile-avatar-large" id="avatarLetter">👤</div>
-                <h2 class="profile-title" id="profileName">طالب مسار</h2>
-                <span class="profile-role-badge">حساب طالب نشط</span>
+    <div class="royal-wrapper container">
+        <!-- القائمة الجانبية (الخانات السبعة) -->
+        <aside class="royal-sidebar">
+            <div class="sidebar-user-header">
+                <div class="avatar-container">
+                    <img src="imges/logo2.png" id="profileImg" class="sidebar-avatar">
+                    <span class="online-pulse"></span>
+                </div>
+                <h4 id="sideUserName">طالب مَسار</h4>
+                <p id="sideUserGrade">-</p>
+            </div>
+            <nav class="sidebar-nav">
+                <button class="side-item active" onclick="switchTab('tab-user', this)"><i class="fas fa-user-circle"></i> ملف المستخدم</button>
+                <button class="side-item" onclick="switchTab('tab-teachers', this)"><i class="fas fa-user-tie"></i> المدرسين</button>
+                <button class="side-item" onclick="switchTab('tab-recharge', this)"><i class="fas fa-qrcode"></i> شحن كود سنتر</button>
+                <button class="side-item" onclick="switchTab('tab-my-courses', this)"><i class="fas fa-graduation-cap"></i> كورساتي</button>
+                <button class="side-item" onclick="switchTab('tab-invoices', this)"><i class="fas fa-file-invoice-dollar"></i> الفواتير</button>
+                <button class="side-item" onclick="switchTab('tab-subs', this)"><i class="fas fa-calendar-check"></i> الاشتراكات</button>
+                <button class="side-item" onclick="switchTab('tab-results', this)"><i class="fas fa-poll"></i> نتائج الامتحانات</button>
+            </nav>
+        </aside>
+
+        <!-- منطقة المحتوى الرئيسية -->
+        <main class="royal-content">
+            
+            <!-- 1. ملف المستخدم والإحصائيات -->
+            <div id="tab-user" class="profile-pane active">
+                <div class="glass-section-title"><h3><i class="fas fa-id-card"></i> المعلومات الشخصية</h3></div>
+                <div class="user-info-display">
+                    <div class="info-item"><span>الاسم:</span> <b id="u-name">-</b></div>
+                    <div class="info-item"><span>الهاتف:</span> <b id="u-phone">-</b></div>
+                    <div class="info-item"><span>البريد:</span> <b id="u-email">-</b></div>
+                </div>
+
+                <div class="glass-section-title"><h3><i class="fas fa-chart-pie"></i> إحصائيات التعلم</h3></div>
+                <div class="dynamic-stats-row">
+                    <div class="stat-progress-item">
+                        <div class="circular-progress blue">
+                            <svg><circle class="bg" cx="50" cy="50" r="45"></circle><circle class="progress" cx="50" cy="50" r="45"></circle></svg>
+                            <div class="content"><h2 class="counter" id="v-count" data-target="0">0</h2></div>
+                        </div>
+                        <p>فيديو تمت مشاهدته</p>
+                    </div>
+                    <div class="stat-progress-item">
+                        <div class="circular-progress pink">
+                            <svg><circle class="bg" cx="50" cy="50" r="45"></circle><circle class="progress" cx="50" cy="50" r="45"></circle></svg>
+                            <div class="content"><h2 class="counter" id="e-count" data-target="0">0</h2></div>
+                        </div>
+                        <p>امتحان مكتمل</p>
+                    </div>
+                    <div class="stat-progress-item">
+                        <div class="circular-progress gold">
+                            <svg><circle class="bg" cx="50" cy="50" r="45"></circle><circle class="progress" cx="50" cy="50" r="45"></circle></svg>
+                            <div class="content"><h2 class="counter" id="g-count" data-target="0">0</h2><span>%</span></div>
+                        </div>
+                        <p>متوسط النتائج</p>
+                    </div>
+                </div>
             </div>
 
-            <div class="profile-details">
-                <div class="detail-item">
-                    <span class="detail-label">رقم الهاتف</span>
-                    <span class="detail-value" id="profilePhone">-</span>
-                </div>
-                <div class="detail-item">
-                    <span class="detail-label">رقم ولي الأمر</span>
-                    <span class="detail-value" id="profileParentPhone">-</span>
-                </div>
-                <div class="detail-item">
-                    <span class="detail-label">الرقم القومي</span>
-                    <span class="detail-value" id="profileNationalId">-</span>
-                </div>
-                <div class="detail-item">
-                    <span class="detail-label">تاريخ الميلاد</span>
-                    <span class="detail-value" id="profileBirthDate">-</span>
-                </div>
-                <div class="detail-item">
-                    <span class="detail-label">المرحلة الدراسية</span>
-                    <span class="detail-value" id="profileGrade">-</span>
-                </div>
-                <div class="detail-item" id="sectionDetailItem" style="display: none;">
-                    <span class="detail-label">الشعبة</span>
-                    <span class="detail-value" id="profileSection">-</span>
-                </div>
-                <div class="detail-item">
-                    <span class="detail-label">اللغة الثانية</span>
-                    <span class="detail-value" id="profileLang">-</span>
-                </div>
-                <div class="detail-item" style="border: 2px solid rgba(44, 167, 114, 0.3); background: rgba(44, 167, 114, 0.05);">
-                    <span class="detail-label" style="color: var(--primary-green)">الرصيد الحالي</span>
-                    <span class="detail-value" style="color: var(--primary-green); font-size: 1.3rem;" id="profileBalance">0 ج.م</span>
+            <!-- 2. المدرسين -->
+            <div id="tab-teachers" class="profile-pane">
+                <div class="glass-section-title"><h3>المدرسين المتابعين</h3></div>
+                <div class="empty-state-royal"><i class="fas fa-users-viewfinder"></i><p>لا تتابع أي مدرس حالياً.</p></div>
+            </div>
+
+            <!-- 3. شحن الكود -->
+            <div id="tab-recharge" class="profile-pane">
+                <div class="glass-section-title"><h3>شحن كود السنتر</h3></div>
+                <div class="recharge-container">
+                    <div class="input-glow-row">
+                        <input type="text" id="centerCode" placeholder="أدخل الكود المكون من 12 رقم">
+                        <button onclick="checkCenterCode()" class="btn-royal-action">تحقق</button>
+                    </div>
+                    <div id="codePreview" class="code-preview-card" style="display: none;">
+                        <!-- يظهر هنا الفيديو بعد التحقق -->
+                    </div>
                 </div>
             </div>
 
-            <div class="profile-actions">
-                <a href="index.html" class="profile-btn btn-fill" style="width: 100%;">العودة للرئيسية</a>
+            <!-- 4. كورساتي -->
+            <div id="tab-my-courses" class="profile-pane">
+                <div class="glass-section-title"><h3>مكتبة كورساتي</h3></div>
+                <div class="filter-controls">
+                    <select id="courseSubject"><option>كل المواد</option></select>
+                    <select id="courseTeacher"><option>كل المدرسين</option></select>
+                </div>
+                <div class="empty-state-royal"><p>لا توجد كورسات مشتراة حالياً.</p></div>
             </div>
-        </div>
+
+            <!-- 5. الفواتير -->
+            <div id="tab-invoices" class="profile-pane">
+                <div class="glass-section-title"><h3>سجل الفواتير</h3></div>
+                <div class="table-responsive">
+                    <table class="royal-table">
+                        <thead><tr><th>التاريخ</th><th>البيان</th><th>المبلغ</th><th>الحالة</th></tr></thead>
+                        <tbody><tr><td colspan="4" style="text-align:center; padding:30px; opacity:0.5">لا يوجد سجلات</td></tr></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 6. الاشتراكات -->
+            <div id="tab-subs" class="profile-pane">
+                <div class="glass-section-title"><h3>الاشتراكات النشطة</h3></div>
+                <div class="empty-state-royal"><i class="fas fa-calendar-alt"></i><p>لا يوجد اشتراكات شهرية حالياً.</p></div>
+            </div>
+
+            <!-- 7. نتائج الامتحانات -->
+            <div id="tab-results" class="profile-pane">
+                <div class="glass-section-title"><h3>نتائج الاختبارات</h3></div>
+                <div class="filter-controls">
+                    <select id="resSub"><option>اختر المادة</option></select>
+                    <select id="resTeach"><option>اختر المدرس</option></select>
+                </div>
+                <div class="empty-state-royal"><p>يرجى اختيار المادة والمدرس لعرض الدرجات.</p></div>
+            </div>
+
+        </main>
     </div>
 
     <script src="script.js" defer></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-            if (!currentUser) {
-                alert('عذراً، يجب تسجيل الدخول لرؤية ملفك الشخصي.');
-                window.location.href = 'login.html';
-                return;
-            }
-
-            const fullName = `${currentUser.firstName || ''} ${currentUser.secondName || ''} ${currentUser.thirdName || ''} ${currentUser.fourthName || ''}`.trim() || currentUser.name || 'طالب مسار';
-            document.getElementById('profileName').textContent = fullName;
-            document.getElementById('avatarLetter').textContent = (currentUser.firstName || 'ط')[0];
-            document.getElementById('profilePhone').textContent = currentUser.phone || '-';
-            document.getElementById('profileParentPhone').textContent = currentUser.parentPhone || '-';
-            document.getElementById('profileNationalId').textContent = currentUser.nationalId || '-';
-            document.getElementById('profileGrade').textContent = currentUser.grade || '-';
-            document.getElementById('profileLang').textContent = currentUser.secondLanguage || 'لا يوجد';
-            document.getElementById('profileBalance').textContent = `${currentUser.balance !== undefined ? currentUser.balance : 0} ج.م`;
-
-            if (currentUser.section) {
-                document.getElementById('sectionDetailItem').style.display = 'flex';
-                document.getElementById('profileSection').textContent = currentUser.section;
-            }
-
-            // تنسيق تاريخ الميلاد بشكل مقروء
-            if (currentUser.birthDate) {
-                const date = new Date(currentUser.birthDate);
-                if (!isNaN(date)) {
-                    document.getElementById('profileBirthDate').textContent = date.toLocaleDateString('ar-EG', {
-                        year: 'numeric',
-                        month: 'long',
-                        day: 'numeric'
-                    });
-                } else {
-                    document.getElementById('profileBirthDate').textContent = currentUser.birthDate;
-                }
-            }
-        });
-    </script>
 </body>
 </html>

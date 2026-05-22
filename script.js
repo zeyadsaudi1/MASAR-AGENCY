@@ -1073,4 +1073,80 @@ function updateCourseDots() {
     const dots = document.querySelectorAll('.c-dot');
     const index = Math.round(wrapper.scrollLeft / -375);
     dots.forEach((dot, i) => dot.classList.toggle('active', i === index));
-}
+}
+
+
+/*------------------البروفايل-----------------*/
+function loadFullProfile() {
+    const user = JSON.parse(localStorage.getItem('currentUser'));
+    if (!user) { window.location.href = 'login.html'; return; }
+
+    // 1. تحديث النصوص الشخصية
+    document.getElementById('sideUserName').textContent = user.firstName;
+    document.getElementById('sideUserGrade').textContent = user.grade;
+    document.getElementById('u-name').textContent = `${user.firstName} ${user.lastName}`;
+    document.getElementById('u-phone').textContent = user.phone;
+    document.getElementById('u-email').textContent = user.username + "@masar.edu";
+    document.getElementById('u-grade').textContent = user.grade;
+
+    if (user.profileImage) document.getElementById('profileImg').src = user.profileImage;
+
+    // 2. ضبط أهداف الإحصائيات (قيم من داتا الطالب أو 0)
+    document.getElementById('v-count').setAttribute('data-target', user.watchedVideos || 0);
+    document.getElementById('e-count').setAttribute('data-target', user.examsTaken || 0);
+    document.getElementById('g-count').setAttribute('data-target', user.averageGrade || 0);
+
+    runCircularProgress();
+}
+
+function runCircularProgress() {
+    const items = document.querySelectorAll('.stat-progress-item');
+    const circumference = 283; 
+
+    items.forEach(item => {
+        const counter = item.querySelector('.counter');
+        const circle = item.querySelector('.progress');
+        const target = +counter.getAttribute('data-target');
+        
+        let count = 0;
+        const updateNum = () => {
+            const inc = target / 40;
+            if (count < target) {
+                count += inc;
+                counter.innerText = Math.ceil(count);
+                setTimeout(updateNum, 35);
+            } else { counter.innerText = target; }
+        };
+        updateNum();
+
+        let max = 100;
+        if (item.querySelector('.blue')) max = 40; // سقف المشاهدات
+        if (item.querySelector('.pink')) max = 20; // سقف الامتحانات
+        
+        const offset = circumference - (target / max) * circumference;
+        circle.style.strokeDashoffset = isNaN(offset) ? circumference : offset;
+    });
+}
+
+function switchTab(tabId, element) {
+    document.querySelectorAll('.profile-pane').forEach(p => {
+        p.classList.remove('active');
+        p.style.display = 'none';
+    });
+    document.querySelectorAll('.side-item').forEach(b => b.classList.remove('active'));
+
+    const target = document.getElementById(tabId);
+    if (target) {
+        target.style.display = 'block';
+        setTimeout(() => target.classList.add('active'), 10);
+        if (tabId === 'tab-user') runCircularProgress();
+    }
+    element.classList.add('active');
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    if (document.querySelector('.royal-dashboard')) {
+        loadFullProfile();
+        switchTab('tab-user', document.querySelector('.side-item.active'));
+    }
+});
