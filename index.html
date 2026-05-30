@@ -6,46 +6,57 @@
     <title>MASAR-مَســـار</title>
 </head>
 <body class="home-page">
-    <header>
-        <div class="header-inner">
-            <div class="header-left">
-                <div class="logo">
-                    <span class="logo-mark">
-                        <img class="logo-dark" src="imges/logo.png" alt="MASAR-مَســـار logo dark">
-                        <img class="logo-light" src="imges/logo2.png" alt="MASAR-مَســـار logo light">
-                    </span>
-                    <span>MASAR-مَســـار</span>
-                </div>
-                <div class="header-icons">
-                    <button class="icon-btn theme-switcher" data-theme="light" aria-label="وضع النهار">☀</button>
-                    <button class="icon-btn theme-switcher" data-theme="dark" aria-label="وضع الظلام">🌙</button>
-                </div>
+   <!-- النافبار المطور النحيف والممتد بعرض الصفحة بالكامل -->
+<header>
+    <div class="header-inner">
+        <!-- اليسار: اللوجو وأزرار الأوضاع -->
+        <div class="header-left">
+            <div class="logo">
+                <span class="logo-mark">
+                    <img class="logo-dark" src="imges/logo.png" alt="MASAR Logo">
+                    <img class="logo-light" src="imges/logo2.png" alt="MASAR Logo">
+                </span>
+                <span>MASAR-مَســـار</span>
             </div>
-           <nav class="header-actions" id="authActions">
-    <!-- سيتم تبديل هذا المحتوى بواسطة JavaScript -->
-    <a href="login.html" class="btn-outline">تسجيل الدخول</a>
-    <a href="register.html" class="btn-fill">حساب جديد</a>
-</nav>
+            <div class="header-icons">
+                <button class="icon-btn theme-switcher" data-theme="light" aria-label="وضع النهار">☀</button>
+                <button class="icon-btn theme-switcher" data-theme="dark" aria-label="وضع الظلام">🌙</button>
+            </div>
+        </div>
 
-<!-- إضافة قائمة المستخدم (تكون مخفية افتراضياً) -->
-<div class="user-dropdown-container" id="userDropdownArea" style="display: none;">
-    <button class="user-menu-btn" onclick="toggleUserMenu()">
-        <span id="navUserName">الطالب</span>
-        <div class="user-icon-circle">👤</div>
-    </button>
-    
-    <div class="user-dropdown-menu" id="userMenu">
-        <a href="profile.html" class="menu-item">👤 البروفايل</a>
-        <div class="menu-item balance-item">
-            <span>💰 الرصيد (النقط):</span>
-            <span id="userPoints">0</span> ج.م
+        <!-- المنتصف: روابط التنقل السلس للمنصة -->
+        <div class="header-center">
+            <a href="index.html" class="nav-link-item active">الرئيسية</a>
+            <a href="#teachersGrid" class="nav-link-item">المعلمين</a>
+            <a href="#subjectsWrapper" class="nav-link-item">المواد الدراسية</a>
+            <a href="#latest-videos-section" class="nav-link-item">الكورسات</a>
         </div>
-        <hr>
-        <button onclick="handleLogout()" class="menu-item logout-btn">🚪 تسجيل خروج</button>
+
+        <!-- اليمين: إجراءات المستخدم (تسجيل دخول / بروفايل) -->
+        <nav class="header-actions" id="authActions">
+            <a href="login.html" class="btn-outline">تسجيل الدخول</a>
+            <a href="register.html" class="btn-fill">حساب جديد</a>
+        </nav>
+
+        <!-- قائمة الطالب عند تسجيل الدخول -->
+        <div class="user-dropdown-container" id="userDropdownArea" style="display: none;">
+            <button class="user-menu-btn" onclick="toggleUserMenu()">
+                <span id="navUserName">الطالب</span>
+                <div class="user-icon-circle">👤</div>
+            </button>
+            
+            <div class="user-dropdown-menu" id="userMenu">
+                <a href="profile.html" class="menu-item">👤 البروفايل</a>
+                <div class="menu-item balance-item">
+                    <span>💰 الرصيد:</span>
+                    <span id="userPoints">0</span> ج.م
+                </div>
+                <hr>
+                <button onclick="handleLogout()" class="menu-item logout-btn">🚪 تسجيل خروج</button>
+            </div>
+        </div>
     </div>
-</div>
-        </div>
-    </header>
+</header>
 
  <section class="main-hero-area">
     <div class="hero-banner">
@@ -99,11 +110,16 @@
     </div>
 
     <!-- شريط التحكم السفلي -->
-    <div class="subjects-controls">
-        <button class="nav-btn next" onclick="scrollSubjects(1)">→</button>
-        <div class="pagination-dots" id="paginationDots"></div>
-        <button class="nav-btn prev" onclick="scrollSubjects(-1)">←</button>
-    </div>
+        <!-- شريط التحكم السفلي للمواد الدراسية -->
+<div class="subjects-controls">
+    <button class="nav-btn prev" onclick="scrollSubjects(-1)" aria-label="السابق">
+        <i class="fas fa-chevron-right"></i>
+    </button>
+    <div class="pagination-dots" id="paginationDots"></div>
+    <button class="nav-btn next" onclick="scrollSubjects(1)" aria-label="التالي">
+        <i class="fas fa-chevron-left"></i>
+    </button>
+</div>
 </section>
 <section class="courses-section" id="latest-videos-section" style="background-color: var(--surface-alt);">
     <div class="container">
@@ -113,27 +129,27 @@
         </div>
     </div>
 </section>
-
+<!-- 
 <section class="courses-section">
     <div class="container">
         <h2 class="section-main-title">كورساتنا المتاحة للعام 2025/2026</h2>
         
         <div class="courses-container">
-            <!-- سهم التنقل الأيمن -->
+             سهم التنقل الأيمن 
             <button class="course-nav-btn next" onclick="scrollCourses(1)">&#10095;</button>
             
             <div class="courses-wrapper" id="freeCoursesWrapper">
-                <!-- الكروت ستتولد هنا بواسطة JavaScript -->
+               
             </div>
 
-            <!-- سهم التنقل الأيسر -->
+         
             <button class="course-nav-btn prev" onclick="scrollCourses(-1)">&#10094;</button>
         </div>
 
-        <!-- نقط التنقل -->
+     
         <div class="course-dots" id="freeCourseDots"></div>
     </div>
-</section>
+</section> -->
 
     <footer class="site-footer">
     <div class="footer-container">

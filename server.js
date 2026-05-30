@@ -51,23 +51,20 @@ mongoose.connect(process.env.MONGODB_URI).then(() => {
 
 // ================= API ROUTES =================
 
-// Auth: Register
+// Auth: Register (مسار تسجيل حساب طالب جديد)
 app.post('/api/register', async (req, res) => {
     try {
         const { username, firstName, lastName, birthDate, phone, parentPhone, nationalId, governorate, grade, section, secondLanguage, password } = req.body;
         
-        // Basic validation
         if(!username || !firstName || !lastName || !phone || !nationalId || !password) {
             return res.status(400).json({ success: false, message: 'الرجاء ملء جميع الحقول المطلوبة' });
         }
 
-        // Egyptian phone validation
         const phoneRegex = /^01[0125]\d{8}$/;
         if (!phoneRegex.test(phone) || (parentPhone && !phoneRegex.test(parentPhone))) {
-            return res.status(400).json({ success: false, message: 'رقم الهاتف أو رقم هاتف ولي الأمر غير صحيح. يجب أن يتكون من 11 رقماً ويبدأ بـ 010 أو 011 أو 012 أو 015' });
+            return res.status(400).json({ success: false, message: 'رقم الهاتف غير صحيح' });
         }
 
-        // Check if user exists
         const existingUser = await User.findOne({ $or: [{ phone }, { nationalId }, { username }] });
         if (existingUser) {
             return res.status(400).json({ success: false, message: 'رقم الهاتف، الرقم القومي أو اسم المستخدم مسجل مسبقاً' });
@@ -85,17 +82,17 @@ app.post('/api/register', async (req, res) => {
     }
 });
 
-// Auth: Login
+// Auth: Login (مسار تسجيل دخول الطلاب والمشرف المخصص)
 app.post('/api/login', async (req, res) => {
     try {
         const { phone, password } = req.body;
         
-        // Admin hardcoded check
-        if(phone === '01234567890' && password === 'admin') {
-            return res.json({ success: true, user: { role: 'admin', name: 'Admin' } });
+        // التحقق من حساب الأدمن المخصص الخاص بك
+        if(phone === '01556448880' && password === 'masar2027@agency') {
+            return res.json({ success: true, user: { _id: "admin-master-id", role: 'admin', firstName: 'الإدارة', lastName: '', phone: '01556448880' } });
         }
 
-        const user = await User.findOne({ phone, password }); // Note: Using plain text for simplicity per original design, but bcrypt is recommended.
+        const user = await User.findOne({ phone, password });
         if (!user) {
             return res.status(401).json({ success: false, message: 'رقم الهاتف أو كلمة المرور غير صحيحة' });
         }
@@ -107,6 +104,132 @@ app.post('/api/login', async (req, res) => {
     }
 });
 
+// مسار متابعة وإلغاء متابعة المعلم
+app.post('/api/users/:id/follow', async (req, res) => {
+    try {
+        const { teacherId } = req.body;
+        const user = await User.findById(req.params.id);
+        if (!user) return res.status(404).json({ success: false, message: 'المستخدم غير موجود' });
+        
+        if (!user.followedTeachers) user.followedTeachers = [];
+        
+        const index = user.followedTeachers.indexOf(teacherId);
+        let isFollowing = false;
+        
+        if (index > -1) {
+            user.followedTeachers.splice(index, 1); // إلغاء المتابعة
+        } else {
+            user.followedTeachers.push(teacherId); // تفعيل المتابعة
+            isFollowing = true;
+        }
+        
+        await user.save();
+        res.json({ success: true, isFollowing, followedTeachers: user.followedTeachers });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ success: false, message: 'حدث خطأ أثناء تحديث المتابعة' });
+    }
+});
+
+// مسار تفعيل كود الشحن والاشتراك الفوري في المحاضرة
+app.post('/api/users/:id/subscribe', async (req, res) => {
+    try {
+        const { codeStr, videoId } = req.body;
+        
+        // 1. التحقق من كود الشحن وصلاحيته لهذا الفيديو
+        const code = await Code.findOne({ code: codeStr, videoId });
+        if (!code) {
+            return res.status(404).json({ success: false, message: 'كود الشحن غير صحيح أو لا يخص هذه المحاضرة' });
+        }
+        if (code.views >= 3) {
+            return res.status(400).json({ success: false, message: 'انتهت عدد المشاهدات المسموحة لهذا الكود (3 مرات كحد أقصى)' });
+        }
+        if (code.studentId && code.studentId.toString() !== req.params.id) {
+            return res.status(403).json({ success: false, message: 'كود الشحن مستخدم بالفعل بواسطة طالب آخر' });
+        }
+
+        // 2. تحديث بيانات المستخدم (إضافة المحاضرة لكورسات الطالب)
+        const user = await User.findById(req.params.id);
+        if (!user) return res.status(404).json({ success: false, message: 'المستخدم غير موجود' });
+        
+        if (!user.subscribedVideos) user.subscribedVideos = [];
+        if (!user.subscribedVideos.includes(videoId)) {
+            user.subscribedVideos.push(videoId);
+        }
+        
+        // 3. ربط الكود بالطالب وزيادة الـ views
+        code.views += 1;
+        code.used = true;
+        code.studentId = req.params.id;
+        
+        await Promise.all([user.save(), code.save()]);
+        res.json({ success: true, remainingViews: 3 - code.views, user });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ success: false, message: 'حدث خطأ أثناء تفعيل الاشتراك' });
+    }
+});
+
+// مسار التحقق من الكود والمشاهدة الآمنة
+app.post('/api/codes/verify', async (req, res) => {
+    try {
+        const { codeStr, videoId, studentId } = req.body;
+        
+        // 0. التحقق من حالة قفل المحاضرة أولاً
+        const video = await Video.findById(videoId);
+        if (!video) return res.status(404).json({ success: false, message: 'المحاضرة غير موجودة' });
+        if (video.closed) {
+            return res.status(403).json({ success: false, message: 'هذه المحاضرة مغلقة حالياً بواسطة الإدارة' });
+        }
+
+        // 1. إذا كان الطالب مشتركاً بالفعل في هذه المحاضرة، نسمح له بالمرور الفوري دون كود
+        if (studentId) {
+            const user = await User.findById(studentId);
+            if (user && user.subscribedVideos && user.subscribedVideos.includes(videoId)) {
+                return res.json({ success: true, remainingViews: 'مفتوحة دائماً', alreadySubscribed: true });
+            }
+        }
+
+        // 2. إذا لم يكن مشتركاً، نطالبه بالتحقق من كود الشحن
+        if (!codeStr) {
+            return res.status(400).json({ success: false, message: 'يرجى إدخال كود الشحن لتفعيل الاشتراك' });
+        }
+
+        const code = await Code.findOne({ code: codeStr, videoId });
+        if (!code) {
+            return res.status(404).json({ success: false, message: 'كود غير صحيح' });
+        }
+        if (code.views >= 3) {
+            return res.status(400).json({ success: false, message: 'انتهت عدد المشاهدات المسموحة' });
+        }
+        if (code.studentId && code.studentId.toString() !== studentId) {
+            return res.status(403).json({ success: false, message: 'كود مستخدم من طالب آخر' });
+        }
+
+        // تفعيل الاشتراك الدائم للطالب في الداتابيز ليراها في بروفايله وتفتح له دائماً
+        if (studentId) {
+            const user = await User.findById(studentId);
+            if (user) {
+                if (!user.subscribedVideos) user.subscribedVideos = [];
+                if (!user.subscribedVideos.includes(videoId)) {
+                    user.subscribedVideos.push(videoId);
+                    await user.save();
+                }
+            }
+        }
+
+        code.views += 1;
+        code.used = true;
+        if (!code.studentId && studentId) code.studentId = studentId;
+        await code.save();
+
+        res.json({ success: true, remainingViews: 3 - code.views, code });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ success: false, message: 'حدث خطأ أثناء التحقق' });
+    }
+});
+
 // Users
 app.get('/api/users', async (req, res) => {
     try {
@@ -114,6 +237,59 @@ app.get('/api/users', async (req, res) => {
         res.json(users);
     } catch (err) {
         res.status(500).json({ success: false, message: 'حدث خطأ' });
+    }
+});
+
+app.delete('/api/users/:id', async (req, res) => {
+    try {
+        await User.findByIdAndDelete(req.params.id);
+        res.json({ success: true });
+    } catch (err) {
+        res.status(500).json({ success: false, message: 'حدث خطأ في حذف الطالب' });
+    }
+});
+
+app.put('/api/users/:id', async (req, res) => {
+    try {
+        const updated = await User.findByIdAndUpdate(req.params.id, req.body, { new: true }).select('-password');
+        res.json({ success: true, user: updated });
+    } catch (err) {
+        res.status(500).json({ success: false, message: 'حدث خطأ في تحديث بيانات الطالب' });
+    }
+});
+
+// مسار قفل وفتح المحاضرة
+app.put('/api/videos/:id/toggle', async (req, res) => {
+    try {
+        const video = await Video.findById(req.params.id);
+        if (!video) return res.status(404).json({ success: false, message: 'المحاضرة غير موجودة' });
+        video.closed = !video.closed; // عكس الحالة الحالية
+        await video.save();
+        res.json({ success: true, closed: video.closed });
+    } catch (err) {
+        res.status(500).json({ success: false, message: 'حدث خطأ في تعديل حالة الفيديو' });
+    }
+});
+
+// مسار تعديل بيانات المحاضرة الأساسية
+app.put('/api/videos/:id', async (req, res) => {
+    try {
+        const { title, price, link } = req.body;
+        const video = await Video.findByIdAndUpdate(req.params.id, { title, price, link }, { new: true });
+        if (!video) return res.status(404).json({ success: false, message: 'المحاضرة غير موجودة' });
+        res.json({ success: true, video });
+    } catch (err) {
+        res.status(500).json({ success: false, message: 'حدث خطأ في التعديل' });
+    }
+});
+
+// مسار حذف المحاضرة نهائياً
+app.delete('/api/videos/:id', async (req, res) => {
+    try {
+        await Video.findByIdAndDelete(req.params.id);
+        res.json({ success: true });
+    } catch (err) {
+        res.status(500).json({ success: false, message: 'حدث خطأ في الحذف' });
     }
 });
 
@@ -129,15 +305,22 @@ app.get('/api/videos', async (req, res) => {
 
 app.post('/api/videos', upload.fields([{ name: 'image', maxCount: 1 }, { name: 'video', maxCount: 1 }]), async (req, res) => {
     try {
-        const { title, link, price } = req.body;
+        const { title, link, price, grades, teacherId } = req.body;
         const imageFile = req.files['image'] ? req.files['image'][0] : null;
         const videoFile = req.files['video'] ? req.files['video'][0] : null;
 
-        const imagePath = imageFile ? `/uploads/${imageFile.filename}` : req.body.image; // Fallback to base64 if sent
+        const imagePath = imageFile ? `/uploads/${imageFile.filename}` : req.body.image;
+        const gradesArray = grades ? (Array.isArray(grades) ? grades : grades.split(",").map(g => g.trim())) : [];
         const videoPath = videoFile ? `/uploads/${videoFile.filename}` : '';
 
         const newVideo = new Video({
-            title, link, price, imagePath, videoPath
+            title, 
+            link, 
+            price, 
+            imagePath, 
+            videoPath, 
+            grades: gradesArray, 
+            teacherId: teacherId || null // حفظ معرف المعلم هنا
         });
 
         await newVideo.save();
@@ -173,7 +356,6 @@ app.post('/api/codes/generate', async (req, res) => {
         const { videoId, videoTitle, count, value } = req.body;
         const newCodes = [];
         for (let i = 0; i < count; i++) {
-            // Generate a random 8-character alphanumeric code
             const codeStr = 'MS-' + Math.random().toString(36).substring(2, 8).toUpperCase();
             newCodes.push({ code: codeStr, videoId, videoTitle, value });
         }
@@ -181,7 +363,7 @@ app.post('/api/codes/generate', async (req, res) => {
         res.status(201).json({ success: true, codes: savedCodes });
     } catch (err) {
         console.error(err);
-        res.status(500).json({ success: false, message: 'حدث خطأ أثناء توليد الأكواد' });
+        res.status(500).json({ success: false, message: 'حدث خطأ' });
     }
 });
 
@@ -213,41 +395,6 @@ app.delete('/api/codes', async (req, res) => {
     }
 });
 
-// Verify Code (for watching video)
-app.post('/api/codes/verify', async (req, res) => {
-    try {
-        const { codeStr, videoId, studentId } = req.body;
-        const code = await Code.findOne({ code: codeStr, videoId });
-        
-        if (!code) {
-            return res.status(404).json({ success: false, message: 'كود غير صحيح' });
-        }
-        
-        if (code.views >= 3) {
-            return res.status(400).json({ success: false, message: 'انتهت عدد المشاهدات المسموحة (3 مرات كحد أقصى)' });
-        }
-
-        // Check if code was used by a different student (optional logic: bind code to first student who uses it)
-        if (code.studentId && code.studentId.toString() !== studentId) {
-            return res.status(403).json({ success: false, message: 'هذا الكود مستخدم بواسطة طالب آخر' });
-        }
-
-        // Update code
-        code.views += 1;
-        code.used = true;
-        if (!code.studentId && studentId) {
-            code.studentId = studentId;
-        }
-        await code.save();
-
-        res.json({ success: true, remainingViews: 3 - code.views, code });
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ success: false, message: 'حدث خطأ أثناء التحقق' });
-    }
-});
-
-
 // Teachers
 app.get('/api/teachers', async (req, res) => {
     try {
@@ -262,24 +409,13 @@ app.post('/api/teachers', upload.single('image'), async (req, res) => {
     try {
         const { name, subjectAr, bio, grades } = req.body;
         const imagePath = req.file ? `/uploads/${req.file.filename}` : '';
-        
         let gradesArray = [];
-        if (grades) {
-            gradesArray = Array.isArray(grades) ? grades : grades.split(',').map(g => g.trim());
-        }
-
-        const newTeacher = new Teacher({
-            name, subjectAr, bio, imagePath, grades: gradesArray
-        });
+        if (grades) gradesArray = Array.isArray(grades) ? grades : grades.split(',').map(g => g.trim());
+        const newTeacher = new Teacher({ name, subjectAr, bio, imagePath, grades: gradesArray });
         await newTeacher.save();
         res.status(201).json({ success: true, teacher: newTeacher });
     } catch (err) {
-        console.error('Teacher add error:', err);
-        if (err.message && err.message.includes('buffering timed out')) {
-            res.status(500).json({ success: false, message: 'فشل الاتصال بقاعدة البيانات. يرجى التأكد من السماح للـ IP في إعدادات MongoDB Atlas أو تشغيل VPN.' });
-        } else {
-            res.status(500).json({ success: false, message: 'حدث خطأ أثناء إضافة المعلم' });
-        }
+        res.status(500).json({ success: false, message: 'خطأ في إضافة المعلم' });
     }
 });
 
@@ -292,51 +428,24 @@ app.delete('/api/teachers/:id', async (req, res) => {
     }
 });
 
-// ─── Security Violation Reports ───
+// التقارير الأمنية
 const reportsFile = path.join(__dirname, 'security-reports.json');
-
-// تحميل التقارير الموجودة
 let securityReports = [];
 try {
-  if (fs.existsSync(reportsFile)) {
-    securityReports = JSON.parse(fs.readFileSync(reportsFile, 'utf8'));
-  }
-} catch (e) {
-  securityReports = [];
-}
+  if (fs.existsSync(reportsFile)) securityReports = JSON.parse(fs.readFileSync(reportsFile, 'utf8'));
+} catch (e) { securityReports = []; }
 
-// استقبال بلاغات الأمان
 app.post('/api/security/report', (req, res) => {
-  const report = {
-    ...req.body,
-    serverTimestamp: new Date().toISOString(),
-    ip: req.ip || req.connection.remoteAddress
-  };
-
+  const report = { ...req.body, serverTimestamp: new Date().toISOString(), ip: req.ip };
   securityReports.push(report);
-
-  // حفظ في ملف JSON
   try {
     fs.writeFileSync(reportsFile, JSON.stringify(securityReports, null, 2), 'utf8');
-  } catch (e) {
-    console.error('❌ خطأ في حفظ التقرير:', e.message);
-  }
-
-  console.log(`🛡️ [تحذير أمني] ${report.reason} - المستخدم: ${report.userId} - الفيديو: ${report.videoId}`);
-
-  res.json({ success: true, message: 'تم استلام البلاغ' });
+  } catch (e) { console.error(e); }
+  res.json({ success: true });
 });
 
-// عرض التقارير (للأدمن فقط)
-app.get('/api/security/reports', (req, res) => {
-  res.json(securityReports);
-});
+app.get('/api/security/reports', (req, res) => res.json(securityReports));
 
-// Fallback routing for SPA
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'index.html'));
-});
+app.get('*', (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
 
-app.listen(port, () => {
-  console.log(`🚀 الخادم يعمل على: http://localhost:${port}`);
-});
+app.listen(port, () => console.log(`🚀 الخادم يعمل على: http://localhost:${port}`));

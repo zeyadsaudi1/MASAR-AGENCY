@@ -3,7 +3,7 @@ const themeButtons = document.querySelectorAll('.theme-switcher');
 let videos = [];
 let codes = [];
 let users = [];
-const API_URL = 'http://localhost:3000';
+const API_URL = window.location.origin;
 
 let teachers = [];
 
@@ -152,14 +152,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         }
     }
     
-    // تشغيل لوحة التحكم بعد تحميل البيانات بالكامل
-    if (window.location.pathname.includes('admin.html')) {
-        populateVideoSelect();
-        displayCodes();
-        displayUsers();
-        displayAdminTeachers();
-        showSection('users');
-    }
+    // admin.html له script داخلي خاص به يتحكم في التحميل
 });
 
 function updateSectionVisibility() {
@@ -187,34 +180,50 @@ function updateSectionVisibility() {
 
 function handleLogin(event) {
     event.preventDefault();
-    const phone = document.querySelector('input[type="tel"]').value;
-    const password = document.querySelector('input[type="password"]').value;
+    const phone = document.getElementById('loginPhone').value.trim();
+    const password = document.getElementById('loginPassword').value.trim();
+    
+    // التحقق من عدم ترك الحقول فارغة
+    if (!phone || !password) {
+        alert('❌ يرجى ملء رقم الهاتف وكلمة المرور');
+        return false;
+    }
     
     // الحساب الإداري
     if (phone === '01234567890' && password === 'admin') {
+        localStorage.setItem('currentUser', JSON.stringify({ role: 'admin', name: 'Admin' }));
         window.location.href = 'admin.html';
-        return;
+        return false;
     }
     
     // التحقق من قاعدة البيانات
+    console.log('جاري محاولة تسجيل الدخول...', { phone, password });
     fetch(`${API_URL}/api/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ phone, password })
-    }).then(res => res.json())
-      .then(data => {
-          if (data.success) {
-              localStorage.setItem('currentUser', JSON.stringify(data.user));
-              alert('✅ تم الدخول بنجاح!');
-              window.location.href = 'index.html';
-          } else {
-              alert('❌ بيانات غير صحيحة!');
-          }
-      })
-      .catch(err => {
-          alert('❌ خطأ في الاتصال بقاعدة البيانات');
-          console.error(err);
-      });
+    })
+    .then(res => {
+        console.log('استجابة الخادم:', res.status);
+        return res.json();
+    })
+    .then(data => {
+        console.log('بيانات الاستجابة:', data);
+        if (data.success) {
+            localStorage.setItem('currentUser', JSON.stringify(data.user));
+            alert('✅ تم الدخول بنجاح!');
+            window.location.href = 'index.html';
+        } else {
+            alert('❌ ' + (data.message || 'بيانات غير صحيحة'));
+            console.error('خطأ في تسجيل الدخول:', data.message);
+        }
+    })
+    .catch(err => {
+        console.error('خطأ في الاتصال:', err);
+        alert('❌ خطأ في الاتصال بقاعدة البيانات. تأكد من تشغيل الخادم');
+    });
+    
+    return false;
 }
 
 // متغير لتتبع الخطوة الحالية
@@ -391,44 +400,43 @@ function handleAddVideo(event) {
     const link = form.querySelectorAll('input[type="text"]')[1].value;
     const price = form.querySelector('input[type="number"]').value;
     const imageFile = form.querySelector('input[type="file"]').files[0];
-    const videoFile = form.querySelectorAll('input[type="file"]')[1].files[0];
+    const checkedGrades = [...form.querySelectorAll('input[name="video-grades-check"]:checked')].map(cb => cb.value);
 
     if (!imageFile) {
         alert('❌ يرجى اختيار صورة للفيديو');
         return;
     }
+    if (checkedGrades.length === 0) {
+        alert('❌ يرجى اختيار صف دراسي واحد على الأقل');
+        return;
+    }
 
-    const reader = new FileReader();
-    reader.onload = function(e) {
-        const videoData = {
-            title, link,
-            price: parseInt(price),
-            image: e.target.result,
-            video: videoFile ? videoFile.name : ''
-        };
+    const formData = new FormData();
+    formData.append('title', title);
+    formData.append('link', link);
+    formData.append('price', parseInt(price));
+    formData.append('image', imageFile);
+    if (videoFile) formData.append('video', videoFile);
+    checkedGrades.forEach(g => formData.append('grades', g));
 
-        // إرسال البيانات إلى قاعدة البيانات
-        fetch(`${API_URL}/api/videos`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(videoData)
-        }).then(res => res.json())
-          .then(data => {
-              if (data.success) {
-                  alert('✅ تم إضافة الفيديو بنجاح!');
-                  form.reset();
-                  loadDataFromDB();
-                  if (window.location.pathname.includes('admin.html')) populateVideoSelect();
-              } else {
-                  alert('❌ خطأ: ' + data.message);
-              }
-          })
-          .catch(err => {
-              alert('❌ خطأ في الاتصال بقاعدة البيانات');
-              console.error(err);
-          });
-    };
-    reader.readAsDataURL(imageFile);
+    fetch(`${API_URL}/api/videos`, {
+        method: 'POST',
+        body: formData
+    }).then(res => res.json())
+      .then(data => {
+          if (data.success) {
+              alert('✅ تم إضافة الفيديو بنجاح!');
+              form.reset();
+              loadDataFromDB();
+              // admin.html يحدث بيانات الفيديو بنفسه عبر loadAll()
+          } else {
+              alert('❌ خطأ: ' + data.message);
+          }
+      })
+      .catch(err => {
+          alert('❌ خطأ في الاتصال بقاعدة البيانات');
+          console.error(err);
+      });
 }
 
 function handleGenerateCodes(event) {
@@ -616,6 +624,11 @@ function renderSubjects() {
     const dotsContainer = document.getElementById('paginationDots');
     if (!wrapper) return;
     
+    // حماية إضافية للتأكد من أن متغير المعلمين هو مصفوفة دائماً
+    if (!Array.isArray(teachers)) {
+        teachers = [];
+    }
+    
     // تجميع المعلمين حسب المادة الدراسية من قاعدة البيانات
     const subjectCounts = {};
     teachers.forEach(t => {
@@ -628,27 +641,37 @@ function renderSubjects() {
     const subjectsList = Object.keys(subjectCounts);
     
     if (subjectsList.length === 0) {
-        wrapper.innerHTML = '<p style="color: var(--gray); text-align: center; width: 100%;">لا توجد مواد دراسية مضافة حالياً.</p>';
+        wrapper.innerHTML = '<p style="color: var(--gray); text-align: center; width: 100%;">لا توجد مواد دراسية مضافة حالياً. يرجى إضافة معلم مادة أولاً.</p>';
         if (dotsContainer) dotsContainer.innerHTML = '';
         return;
     }
 
-    // تعيين أيقونات افتراضية للمواد
-    const icons = ["imges/sub1.png", "imges/sub2.png", "imges/sub3.png", "imges/sub4.png", "imges/sub5.png", "imges/sub6.png"];
+// خريطة الربط المحدثة لحل مشكلة أيقونة الكيمياء
+    const subjectVisuals = {
+        "الرياضيات": "fa-calculator",
+        "العلوم": "fa-flask",
+        "اللغة العربية": "fa-book-open",
+        "الفيزياء": "fa-atom",
+        "الكيمياء": "fa-vials", // تم تحديثها هنا لتعمل على كل الإصدارات
+        "اللغة الإنجليزية": "fa-language",
+        "الأحياء": "fa-dna"
+    };
 
     wrapper.innerHTML = subjectsList.map((subject, idx) => {
         const count = subjectCounts[subject];
-        const img = icons[idx % icons.length];
+        const iconClass = subjectVisuals[subject] || "fa-book";
+        
         return `
             <div class="subject-card">
-                <img src="${img}" class="subject-img" alt="${subject}">
+                <div class="subject-icon-container">
+                    <i class="fas ${iconClass}"></i>
+                </div>
                 <h3>${subject}</h3>
                 <span class="teacher-count">${count} معلمين</span>
             </div>
         `;
     }).join('');
 
-    // إنشاء النقط بناءً على عدد المواد
     if (dotsContainer) {
         dotsContainer.innerHTML = subjectsList.map((_, i) => 
             `<span class="dot ${i === 0 ? 'active' : ''}" onclick="scrollToIndex(${i})"></span>`
@@ -686,6 +709,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
+
 function watchVideo(videoId) {
     const currentUser = JSON.parse(localStorage.getItem('currentUser'));
     if (!currentUser) {
@@ -694,7 +718,15 @@ function watchVideo(videoId) {
         return;
     }
 
-    const code = prompt('أدخل كود الشحن للمشاهدة:');
+    // إذا كان الطالب مشتركاً بالفعل، نوجهه مباشرة لصفحة المشاهدة بترميز آمن دون سؤاله عن الكود
+    const isSubscribed = (currentUser.subscribedVideos || []).includes(videoId);
+    if (isSubscribed) {
+        window.location.href = `watch.html?videoId=${videoId}&code=ALREADY_SUBSCRIBED`;
+        return;
+    }
+
+    // إذا لم يكن مشتركاً، نطالبه بكود الاشتراك لتفعيل المحاضرة
+    const code = prompt('أدخل كود الشحن للاشتراك في هذه المحاضرة وتفعيلها دائماً في بروفايلك:');
     if (!code) return;
 
     fetch(`${API_URL}/api/codes/verify`, {
@@ -705,9 +737,20 @@ function watchVideo(videoId) {
     .then(res => res.json())
     .then(data => {
         if (data.success) {
-            alert(`✅ كود صحيح! المشاهدات المتبقية: ${data.remainingViews}`);
-            // Redirect to secure watch page with ID and Code
-            window.location.href = `watch.html?videoId=${videoId}&code=${data.code.code}`;
+            alert('🎉 تم الاشتراك في المحاضرة بنجاح وتم تفعيلها في بروفايلك!');
+            
+            // تحديث بيانات المستخدم المسجلة محلياً
+            currentUser.subscribedVideos = currentUser.subscribedVideos || [];
+            if (!currentUser.subscribedVideos.includes(videoId)) {
+                currentUser.subscribedVideos.push(videoId);
+                localStorage.setItem('currentUser', JSON.stringify(currentUser));
+            }
+            
+            if (data.code) {
+                window.location.href = `watch.html?videoId=${videoId}&code=${data.code.code}`;
+            } else {
+                window.location.href = `watch.html?videoId=${videoId}&code=ALREADY_SUBSCRIBED`;
+            }
         } else {
             alert('❌ ' + data.message);
         }
@@ -717,7 +760,6 @@ function watchVideo(videoId) {
         console.error(err);
     });
 }
-
 
 
 
@@ -791,36 +833,20 @@ function deleteTeacher(id) {
     });
 }
 
-function showSection(section) {
-    const sectionMap = {
-        'users': 'users-list',
-        'codes': 'codes-list',
-        'online': 'online-list',
-        'add-video': 'add-video',
-        'generate-codes': 'generate-codes',
-        'teachers': 'teachers-section'
-    };
-    const sections = Object.values(sectionMap);
-    sections.forEach(s => {
-        const el = document.getElementById(s);
-        if (el) el.style.display = s === sectionMap[section] ? 'block' : 'none';
-    });
-    document.querySelectorAll('.sidebar button').forEach(btn => btn.classList.remove('active'));
-    
-    if (typeof event !== 'undefined' && event && event.target) {
-        event.target.classList.add('active');
-    } else {
-        const btn = Array.from(document.querySelectorAll('.sidebar button')).find(b => b.getAttribute('onclick')?.includes(`'${section}'`));
-        if (btn) btn.classList.add('active');
-    }
-}
+// showSection moved to admin.html to avoid conflict
 // عرض المعلمين في الصفحة الرئيسية
 // وظيفة عرض المعلمين مع نظام الحركة المستمرة والسحب اليدوي
 function renderTeachers() {
     const teachersGrid = document.getElementById('teachersGrid');
     if (!teachersGrid) return;
 
-    const teachersList = [...teachers];
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    const studentGrade = currentUser && currentUser.grade ? currentUser.grade : null;
+    
+    // فلترة المعلمين بناءً على صف الطالب (لو مسجل دخول)
+    const teachersList = studentGrade
+        ? teachers.filter(t => !t.grades || t.grades.length === 0 || t.grades.includes(studentGrade))
+        : [...teachers];
     if (teachersList.length === 0) return;
 
     // 1. توليد محتوى الكروت
@@ -844,7 +870,7 @@ function renderTeachers() {
                     <span class="teacher-stat-label">تقييم</span>
                 </div>
             </div>
-            <button class="teacher-btn">اتابع الآن</button>
+            <button class="teacher-btn" onclick="goToTeacherPage('${teacher._id}')">اتابع الآن</button>
         </div>
     `).join('');
 
@@ -966,7 +992,14 @@ function renderVideos() {
     const section = document.getElementById('latest-videos-section');
     if (!container) return;
 
-    if (videos.length === 0) {
+    const currentUser2 = JSON.parse(localStorage.getItem('currentUser'));
+    const studentGrade2 = currentUser2 && currentUser2.grade ? currentUser2.grade : null;
+    
+    const filteredVideos = studentGrade2
+        ? videos.filter(v => !v.grades || v.grades.length === 0 || v.grades.includes(studentGrade2))
+        : [...videos];
+
+    if (filteredVideos.length === 0) {
         if (section) section.style.display = 'none';
         container.innerHTML = '<p style="color: var(--gray); text-align: center; width: 100%;">لا توجد محاضرات متاحة حالياً.</p>';
         return;
@@ -974,15 +1007,22 @@ function renderVideos() {
 
     if (section) section.style.display = 'block';
 
-    container.innerHTML = videos.map(video => {
+    container.innerHTML = filteredVideos.map(video => {
+        // التحقق هل الطالب مشترك بالفعل في هذا الفيديو أم لا
+        const isSubscribed = currentUser2 && (currentUser2.subscribedVideos || []).includes(video._id);
+        
+        const actionButtonHTML = isSubscribed
+            ? `<button class="btn-join" onclick="watchVideo('${video._id}')">مشاهدة المحاضرة !</button>`
+            : `<button class="btn-enter" onclick="subscribeVideo('${video._id}')">اشترك الآن 💰</button>`;
+
         return `
             <div class="course-card" style="flex: 0 0 320px;">
-                <img src="${video.image || 'imges/st.jpg'}" class="course-thumb" alt="${video.title}" onerror="this.onerror=null;this.src='imges/st.jpg';">
+                <img src="${video.imagePath || video.image || 'imges/st.jpg'}" class="course-thumb" alt="${video.title}" onerror="this.onerror=null;this.src='imges/st.jpg';">
                 <div class="course-body">
                     <h3 class="course-title">${video.title}</h3>
                     <div class="course-price">${video.price || 0} ج.م</div>
                     <div class="course-btns">
-                        <button class="btn-join" onclick="watchVideo('${video._id}')">مشاهدة المحاضرة !</button>
+                        ${actionButtonHTML}
                     </div>
                 </div>
             </div>
@@ -990,90 +1030,90 @@ function renderVideos() {
     }).join('');
 }
 
-// بيانات الكورسات المجانية
-const freeCoursesData = [
-    {
-        title: "كورس الشهر الثالث- الكيمياء العضوية - عام",
-        price: "مجاني",
-        image: "imges/st2.jpg",
-        date: "الأربعاء، ١٨ مارس ٢٠٢٦",
-        chapter: "الباب الخامس"
-    },
-    {
-        title: "كورس الترم الثاني كاملاً - 2 ث",
-        price: "مجاني",
-        image: "imges/st.jpg",
-        date: "الخميس، ٢٩ يناير ٢٠٢٦",
-        chapter: "أول محاضرة بداية من يوم 2/8"
-    },
-    {
-        title: "كورس الشهر الثالث- الكيمياء العضوية - ازهر",
-        price: "مجاني",
-        image: "imges/st2.jpg",
-        date: "الأربعاء، ١٨ مارس ٢٠٢٦",
-        chapter: "الباب الخامس"
-    },
-    {
-        title: "كورس الترم الثاني كاملاً - 2 ث",
-        price: "مجاني",
-        image: "imges/st.jpg",
-        date: "الخميس، ٢٩ يناير ٢٠٢٦",
-        chapter: "أول محاضرة بداية من يوم 2/8"
-    }
-];
+// // // بيانات الكورسات المجانية
+// // const freeCoursesData = [
+// //     {
+// //         title: "كورس الشهر الثالث- الكيمياء العضوية - عام",
+// //         price: "مجاني",
+// //         image: "imges/st2.jpg",
+// //         date: "الأربعاء، ١٨ مارس ٢٠٢٦",
+// //         chapter: "الباب الخامس"
+// //     },
+// //     {
+// //         title: "كورس الترم الثاني كاملاً - 2 ث",
+// //         price: "مجاني",
+// //         image: "imges/st.jpg",
+// //         date: "الخميس، ٢٩ يناير ٢٠٢٦",
+// //         chapter: "أول محاضرة بداية من يوم 2/8"
+// //     },
+// //     {
+// //         title: "كورس الشهر الثالث- الكيمياء العضوية - ازهر",
+// //         price: "مجاني",
+// //         image: "imges/st2.jpg",
+// //         date: "الأربعاء، ١٨ مارس ٢٠٢٦",
+// //         chapter: "الباب الخامس"
+// //     },
+// //     {
+// //         title: "كورس الترم الثاني كاملاً - 2 ث",
+// //         price: "مجاني",
+// //         image: "imges/st.jpg",
+// //         date: "الخميس، ٢٩ يناير ٢٠٢٦",
+// //         chapter: "أول محاضرة بداية من يوم 2/8"
+// //     }
+// // ];
 
-function renderFreeCourses() {
-    const wrapper = document.getElementById('freeCoursesWrapper');
-    const dotsContainer = document.getElementById('freeCourseDots');
-    if (!wrapper) return;
+// function renderFreeCourses() {
+//     const wrapper = document.getElementById('freeCoursesWrapper');
+//     const dotsContainer = document.getElementById('freeCourseDots');
+//     if (!wrapper) return;
 
-    wrapper.innerHTML = freeCoursesData.map(course => `
-        <div class="course-card">
-            <img src="${course.image}" class="course-thumb" alt="${course.title}">
-            <div class="course-body">
-                <h3 class="course-title">${course.title}</h3>
-                <div class="course-price">${course.price}</div>
-                <div class="course-meta">
-                    <div class="meta-item">📅 ${course.date}</div>
-                    <div class="meta-item">📖 ${course.chapter}</div>
-                </div>
-                <div class="course-btns">
-                    <button class="btn-enter" onclick="alert('كورس مجاني - متاح للمشاهدة المباشرة')">الدخول للكورس</button>
-                    <button class="btn-join" onclick="alert('أنت مشترك بالفعل في هذا الكورس المجاني!')">مشترك بالفعل !</button>
-                </div>
-            </div>
-        </div>
-    `).join('');
+//     wrapper.innerHTML = freeCoursesData.map(course => `
+//         <div class="course-card">
+//             <img src="${course.image}" class="course-thumb" alt="${course.title}">
+//             <div class="course-body">
+//                 <h3 class="course-title">${course.title}</h3>
+//                 <div class="course-price">${course.price}</div>
+//                 <div class="course-meta">
+//                     <div class="meta-item">📅 ${course.date}</div>
+//                     <div class="meta-item">📖 ${course.chapter}</div>
+//                 </div>
+//                 <div class="course-btns">
+//                     <button class="btn-enter" onclick="alert('كورس مجاني - متاح للمشاهدة المباشرة')">الدخول للكورس</button>
+//                     <button class="btn-join" onclick="alert('أنت مشترك بالفعل في هذا الكورس المجاني!')">مشترك بالفعل !</button>
+//                 </div>
+//             </div>
+//         </div>
+//     `).join('');
 
-    if (dotsContainer) {
-        dotsContainer.innerHTML = freeCoursesData.map((_, i) => 
-            `<span class="c-dot ${i === 0 ? 'active' : ''}" onclick="jumpToCourse(${i})"></span>`
-        ).join('');
-    }
-}
+//     if (dotsContainer) {
+//         dotsContainer.innerHTML = freeCoursesData.map((_, i) => 
+//             `<span class="c-dot ${i === 0 ? 'active' : ''}" onclick="jumpToCourse(${i})"></span>`
+//         ).join('');
+//     }
+// }
 
-window.scrollCourses = function(direction) {
-    const wrapper = document.getElementById('freeCoursesWrapper');
-    if (!wrapper) return;
-    const scrollAmount = 375;
-    wrapper.scrollBy({ left: -direction * scrollAmount, behavior: 'smooth' });
-    setTimeout(updateCourseDots, 500);
-};
+// window.scrollCourses = function(direction) {
+//     const wrapper = document.getElementById('freeCoursesWrapper');
+//     if (!wrapper) return;
+//     const scrollAmount = 375;
+//     wrapper.scrollBy({ left: -direction * scrollAmount, behavior: 'smooth' });
+//     setTimeout(updateCourseDots, 500);
+// };
 
-window.jumpToCourse = function(index) {
-    const wrapper = document.getElementById('freeCoursesWrapper');
-    if (!wrapper) return;
-    wrapper.scrollTo({ left: index * -375, behavior: 'smooth' });
-    setTimeout(updateCourseDots, 500);
-};
+// window.jumpToCourse = function(index) {
+//     const wrapper = document.getElementById('freeCoursesWrapper');
+//     if (!wrapper) return;
+//     wrapper.scrollTo({ left: index * -375, behavior: 'smooth' });
+//     setTimeout(updateCourseDots, 500);
+// };
 
-function updateCourseDots() {
-    const wrapper = document.getElementById('freeCoursesWrapper');
-    if (!wrapper) return;
-    const dots = document.querySelectorAll('.c-dot');
-    const index = Math.round(wrapper.scrollLeft / -375);
-    dots.forEach((dot, i) => dot.classList.toggle('active', i === index));
-}
+// function updateCourseDots() {
+//     const wrapper = document.getElementById('freeCoursesWrapper');
+//     if (!wrapper) return;
+//     const dots = document.querySelectorAll('.c-dot');
+//     const index = Math.round(wrapper.scrollLeft / -375);
+//     dots.forEach((dot, i) => dot.classList.toggle('active', i === index));
+// }
 
 
 /*------------------البروفايل-----------------*/
@@ -1082,12 +1122,19 @@ function loadFullProfile() {
     if (!user) { window.location.href = 'login.html'; return; }
 
     // 1. تحديث النصوص الشخصية
-    document.getElementById('sideUserName').textContent = user.firstName;
-    document.getElementById('sideUserGrade').textContent = user.grade;
-    document.getElementById('u-name').textContent = `${user.firstName} ${user.lastName}`;
-    document.getElementById('u-phone').textContent = user.phone;
-    document.getElementById('u-email').textContent = user.username + "@masar.edu";
-    document.getElementById('u-grade').textContent = user.grade;
+    const sideUserName = document.getElementById('sideUserName');
+    const sideUserGrade = document.getElementById('sideUserGrade');
+    const uName = document.getElementById('u-name');
+    const uPhone = document.getElementById('u-phone');
+    const uEmail = document.getElementById('u-email');
+    const uGrade = document.getElementById('u-grade');
+
+    if (sideUserName) sideUserName.textContent = user.firstName || '';
+    if (sideUserGrade) sideUserGrade.textContent = user.grade || '';
+    if (uName) uName.textContent = `${user.firstName || ''} ${user.lastName || ''}`;
+    if (uPhone) uPhone.textContent = user.phone || '';
+    if (uEmail) uEmail.textContent = (user.username || '') + "@masar.edu";
+    if (uGrade) uGrade.textContent = user.grade || '';
 
     if (user.profileImage) document.getElementById('profileImg').src = user.profileImage;
 
@@ -1139,7 +1186,11 @@ function switchTab(tabId, element) {
     if (target) {
         target.style.display = 'block';
         setTimeout(() => target.classList.add('active'), 10);
+        
+        // جلب البيانات ديناميكياً لكل تبويب يتم فتحه
         if (tabId === 'tab-user') runCircularProgress();
+        if (tabId === 'tab-teachers') renderFollowedTeachers(); // تحميل المدرسين المتابعين
+        if (tabId === 'tab-my-courses') renderSubscribedVideos(); // تحميل الكورسات المشتراة
     }
     element.classList.add('active');
 }
@@ -1150,3 +1201,173 @@ document.addEventListener('DOMContentLoaded', () => {
         switchTab('tab-user', document.querySelector('.side-item.active'));
     }
 });
+function checkCenterCode() {
+    const codeInput = document.getElementById('centerCode');
+    const preview = document.getElementById('codePreview');
+    if (!codeInput || !preview) return;
+    
+    const codeStr = codeInput.value.trim().toUpperCase();
+    if (!codeStr) { alert('❌ يرجى إدخال الكود'); return; }
+
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    if (!currentUser) { alert('❌ يجب تسجيل الدخول أولاً'); window.location.href = 'login.html'; return; }
+
+    fetch(`${API_URL}/api/codes/verify`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ codeStr, videoId: null, studentId: currentUser._id })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            const code = data.code;
+            preview.style.display = 'block';
+            preview.innerHTML = `
+                <div style="padding: 16px;">
+                    <h4 style="color: var(--primary-green); margin-bottom: 8px;">✅ كود صحيح!</h4>
+                    <p><strong>الفيديو:</strong> ${code.videoTitle || '—'}</p>
+                    <p><strong>المشاهدات المتبقية:</strong> ${3 - (code.views || 0)} / 3</p>
+                    <p><strong>القيمة:</strong> ${code.value || 0} ج.م</p>
+                    <button onclick="window.location.href='watch.html?videoId=${code.videoId}&code=${code.code}'" 
+                            class="btn-fill" style="margin-top: 12px; width: 100%;">
+                        مشاهدة الفيديو الآن
+                    </button>
+                </div>`;
+        } else {
+            preview.style.display = 'block';
+            preview.innerHTML = `<p style="color:red; padding:16px;">❌ ${data.message || 'كود غير صحيح'}</p>`;
+        }
+    })
+    .catch(() => {
+        preview.style.display = 'block';
+        preview.innerHTML = '<p style="color:red; padding:16px;">❌ خطأ في الاتصال بالسيرفر</p>';
+    });
+}
+window.goToTeacherPage = function(teacherId) {
+    window.location.href = `teachers.html?teacherId=${teacherId}`;
+};
+
+
+window.subscribeVideo = async function(videoId) {
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    if (!currentUser) { 
+        alert('يجب تسجيل الدخول أولاً للاشتراك في المحاضرات'); 
+        window.location.href = 'login.html'; 
+        return; 
+    }
+    
+    const codeStr = prompt('أدخل كود الشحن لتفعيل الاشتراك في هذه المحاضرة:');
+    if (!codeStr) return;
+
+    try {
+        const res = await fetch(`${API_URL}/api/users/${currentUser._id}/subscribe`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ codeStr: codeStr.trim().toUpperCase(), videoId })
+        });
+        const data = await res.json();
+        if (data.success) {
+            alert(`🎉 تم الاشتراك بنجاح! المشاهدات المتبقية لكودك: ${data.remainingViews}`);
+            localStorage.setItem('currentUser', JSON.stringify(data.user)); // تحديث الطالب في الذاكرة المحلية
+            renderVideos(); // إعادة تحميل الأزرار على الرئيسية فوراً
+        } else {
+            alert('❌ ' + data.message);
+        }
+    } catch (err) {
+        alert('❌ خطأ في الاتصال بالسيرفر');
+        console.error(err);
+    }
+}
+
+
+// رندر المدرسين المتابعين للطالب
+async function renderFollowedTeachers() {
+    const container = document.getElementById('tab-teachers');
+    if (!container) return;
+    
+    const user = JSON.parse(localStorage.getItem('currentUser'));
+    if (!user || !user.followedTeachers || user.followedTeachers.length === 0) {
+        container.innerHTML = `
+            <div class="glass-section-title"><h3>المدرسين المتابعين</h3></div>
+            <div class="empty-state-royal"><i class="fas fa-users-viewfinder"></i><p>لا تتابع أي مدرس حالياً.</p></div>`;
+        return;
+    }
+
+    try {
+        const res = await fetch(`${API_URL}/api/teachers`);
+        const allTeachers = await res.json();
+        const followed = allTeachers.filter(t => user.followedTeachers.includes(t._id));
+
+        if (followed.length === 0) {
+            container.innerHTML = `
+                <div class="glass-section-title"><h3>المدرسين المتابعين</h3></div>
+                <div class="empty-state-royal"><i class="fas fa-users-viewfinder"></i><p>لا تتابع أي مدرس حالياً.</p></div>`;
+            return;
+        }
+
+        let html = '<div class="glass-section-title"><h3>المدرسين المتابعين</h3></div>';
+        html += '<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 20px; margin-top: 20px;">';
+        followed.forEach(teacher => {
+            html += `
+                <div class="teacher-card" style="width: 100%; box-sizing: border-box; background: var(--p-bg); border: 1px solid var(--p-border);">
+                    <div class="teacher-avatar-container" style="width: 110px; height: 110px; margin: 0 auto 15px;">
+                        <div class="teacher-avatar" style="width: 110px; height: 110px;">
+                            <img src="${teacher.imagePath || 'imges/1.png'}" alt="${teacher.name}" style="width: 100%; height: 100%; border-radius: 50%;">
+                        </div>
+                    </div>
+                    <h3 class="teacher-name">${teacher.name}</h3>
+                    <p class="teacher-subject">${teacher.subjectAr}</p>
+                    <button class="teacher-btn" onclick="goToTeacherPage('${teacher._id}')" style="margin-top: 10px; width: 100%;">تصفح البروفايل</button>
+                </div>`;
+        });
+        html += '</div>';
+        container.innerHTML = html;
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+// رندر المحاضرات المشترك بها الطالب
+async function renderSubscribedVideos() {
+    const container = document.getElementById('tab-my-courses');
+    if (!container) return;
+
+    const user = JSON.parse(localStorage.getItem('currentUser'));
+    if (!user || !user.subscribedVideos || user.subscribedVideos.length === 0) {
+        container.innerHTML = `
+            <div class="glass-section-title"><h3>مكتبة كورساتي</h3></div>
+            <div class="empty-state-royal"><i class="fas fa-graduation-cap"></i><p>لا توجد كورسات مشتراة حالياً.</p></div>`;
+        return;
+    }
+
+    try {
+        const res = await fetch(`${API_URL}/api/videos`);
+        const allVideos = await res.json();
+        const subscribed = allVideos.filter(v => user.subscribedVideos.includes(v._id));
+
+        if (subscribed.length === 0) {
+            container.innerHTML = `
+                <div class="glass-section-title"><h3>مكتبة كورساتي</h3></div>
+                <div class="empty-state-royal"><i class="fas fa-graduation-cap"></i><p>لا توجد كورسات مشتراة حالياً.</p></div>`;
+            return;
+        }
+
+        let html = '<div class="glass-section-title"><h3>مكتبة كورساتي</h3></div>';
+        html += '<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; margin-top: 20px;">';
+        subscribed.forEach(video => {
+            html += `
+                <div class="course-card" style="width: 100%; box-sizing: border-box; background: var(--p-bg); border: 1px solid var(--p-border);">
+                    <img src="${video.imagePath || 'imges/st.jpg'}" class="course-thumb" alt="${video.title}">
+                    <div class="course-body" style="padding: 15px;">
+                        <h3 class="course-title" style="font-size: 1rem; margin-bottom: 10px;">${video.title}</h3>
+                        <button class="btn-join" onclick="watchVideo('${video._id}')" style="width: 100%; margin-top: 10px;">مشاهدة المحاضرة !</button>
+                    </div>
+                </div>`;
+        });
+        html += '</div>';
+        container.innerHTML = html;
+    } catch (err) {
+        console.error(err);
+    }
+}
+

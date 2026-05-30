@@ -1,92 +1,2120 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="style.css">
-    <title>لوحة التحكم</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة تحكم MASAR</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;900&display=swap');
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --bg: #0f1117;
+            --bg2: #1a1d27;
+            --bg3: #22263a;
+            --surface: #2a2f47;
+            --accent: #dda852;
+            --accent2: #ff6b6b;
+            --gold: #f4a261;
+            --teal: #2ec4b6;
+            --blue: #4361ee;
+            --green: #06d6a0;
+            --purple: #7b2d8b;
+            --txt: #e8eaf0;
+            --txt2: #9ba3c0;
+            --txt3: #5c6480;
+            --border: rgba(255,255,255,0.07);
+            --border2: rgba(255,255,255,0.13);
+            --shadow: 0 4px 24px rgba(0,0,0,0.4);
+            --radius: 14px;
+            --radius-sm: 8px;
+            --sidebar-w: 260px;
+        }
+
+        /* ===== LIGHT MODE ===== */
+        body.light-mode {
+            --bg: #f0f2f8;
+            --bg2: #ffffff;
+            --bg3: #f5f6fa;
+            --surface: #ebedf5;
+            --txt: #1a1d2e;
+            --txt2: #4a5070;
+            --txt3: #8a91b0;
+            --border: rgba(0,0,0,0.07);
+            --border2: rgba(0,0,0,0.12);
+            --shadow: 0 4px 24px rgba(0,0,0,0.08);
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: var(--bg);
+            color: var(--txt);
+            min-height: 100vh;
+            display: flex;
+            overflow-x: hidden;
+            flex-direction: column;
+        }
+
+        /* ===== SIDEBAR ===== */
+        .sidebar {
+            width: var(--sidebar-w);
+            background: var(--bg2);
+            border-left: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            top: 64px; right: 0; bottom: 0;
+            z-index: 100;
+            overflow-y: auto;
+        }
+
+        .sidebar-logo {
+            padding: 28px 24px 20px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .sidebar-logo .brand {
+            display: flex; align-items: center; gap: 12px;
+        }
+
+        .logo-icon {
+            width: 42px; height: 42px;
+            background: linear-gradient(135deg, var(--accent), var(--gold));
+            border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 20px; font-weight: 900; color: #fff;
+        }
+
+        .brand-name { font-size: 18px; font-weight: 700; color: var(--txt); }
+        .brand-sub { font-size: 11px; color: var(--txt3); margin-top: 2px; }
+
+        .sidebar-stats {
+            padding: 16px 16px 8px;
+            display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+        }
+
+        .mini-stat {
+            background: var(--bg3);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 10px 12px;
+            text-align: center;
+        }
+
+        .mini-stat .val { font-size: 20px; font-weight: 700; color: var(--txt); }
+        .mini-stat .lbl { font-size: 10px; color: var(--txt3); margin-top: 2px; }
+
+        .sidebar-nav { padding: 12px 12px; flex: 1; }
+        .nav-group-title { font-size: 10px; color: var(--txt3); font-weight: 600; text-transform: uppercase; letter-spacing: 1px; padding: 16px 12px 8px; }
+
+        .nav-item {
+            display: flex; align-items: center; gap: 12px;
+            padding: 11px 14px;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            color: var(--txt2);
+            font-size: 14px; font-weight: 500;
+            transition: all 0.18s ease;
+            margin-bottom: 3px;
+            border: 1px solid transparent;
+            background: none;
+            width: 100%;
+            text-align: right;
+        }
+
+        .nav-item:hover { background: var(--bg3); color: var(--txt); }
+
+        .nav-item.active {
+            background: rgba(221,168,82,0.12);
+            color: var(--accent);
+            border-color: rgba(221,168,82,0.25);
+        }
+
+        .nav-item i { font-size: 18px; flex-shrink: 0; }
+
+        .nav-badge {
+            margin-right: auto;
+            background: var(--accent);
+            color: #fff;
+            font-size: 10px;
+            padding: 2px 7px;
+            border-radius: 20px;
+            font-weight: 700;
+        }
+
+        .sidebar-footer {
+            padding: 16px;
+            border-top: 1px solid var(--border);
+        }
+
+        .logout-btn {
+            display: flex; align-items: center; gap: 10px;
+            padding: 10px 14px;
+            border-radius: var(--radius-sm);
+            background: rgba(230,57,70,0.1);
+            border: 1px solid rgba(230,57,70,0.25);
+            color: var(--accent2);
+            cursor: pointer; font-size: 14px; font-weight: 500;
+            width: 100%; text-align: right;
+            transition: all 0.18s;
+        }
+        .logout-btn:hover { background: rgba(230,57,70,0.2); }
+
+        /* ===== MAIN ===== */
+        .main {
+            flex: 1;
+            margin-right: var(--sidebar-w);
+            display: flex;
+            flex-direction: column;
+            min-height: calc(100vh - 64px);
+        }
+
+        /* ===== TOPBAR ===== */
+        .topbar {
+            background: var(--bg2);
+            border-bottom: 1px solid var(--border);
+            padding: 0 32px;
+            height: 64px;
+            display: flex; align-items: center; justify-content: space-between;
+            position: sticky; top: 0; z-index: 90;
+        }
+
+        .topbar-title { font-size: 18px; font-weight: 700; color: var(--txt); }
+        .topbar-subtitle { font-size: 12px; color: var(--txt3); margin-top: 2px; }
+
+        .topbar-actions { display: flex; align-items: center; gap: 12px; }
+
+        .topbar-btn {
+            display: flex; align-items: center; gap: 8px;
+            padding: 8px 16px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border2);
+            background: var(--bg3);
+            color: var(--txt2);
+            cursor: pointer; font-size: 13px; font-weight: 500;
+            font-family: 'Cairo', sans-serif;
+            transition: all 0.18s;
+        }
+        .topbar-btn:hover { border-color: var(--accent); color: var(--accent2); }
+        .topbar-btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+        .topbar-btn.primary:hover { background: var(--accent2); }
+
+        /* ===== CONTENT ===== */
+        .content { padding: 28px 32px; flex: 1; }
+
+        .section { display: none; }
+        .section.active { display: block; }
+
+        /* ===== KPI CARDS ===== */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 28px;
+        }
+
+        .kpi-card {
+            background: var(--bg2);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 20px 22px;
+            position: relative;
+            overflow: hidden;
+            transition: border-color 0.2s;
+        }
+        .kpi-card:hover { border-color: var(--border2); }
+
+        .kpi-card::before {
+            content: '';
+            position: absolute;
+            top: 0; right: 0;
+            width: 60px; height: 60px;
+            border-radius: 0 var(--radius) 0 60px;
+            opacity: 0.12;
+        }
+        .kpi-card.red::before { background: var(--accent); }
+        .kpi-card.gold::before { background: var(--gold); }
+        .kpi-card.teal::before { background: var(--teal); }
+        .kpi-card.blue::before { background: var(--blue); }
+
+        .kpi-icon {
+            width: 40px; height: 40px;
+            border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 20px; margin-bottom: 14px;
+        }
+        .kpi-card.red .kpi-icon { background: rgba(230,57,70,0.15); color: var(--accent2); }
+        .kpi-card.gold .kpi-icon { background: rgba(244,162,97,0.15); color: var(--gold); }
+        .kpi-card.teal .kpi-icon { background: rgba(46,196,182,0.15); color: var(--teal); }
+        .kpi-card.blue .kpi-icon { background: rgba(67,97,238,0.15); color: #7b9eff; }
+
+        .kpi-val { font-size: 30px; font-weight: 700; color: var(--txt); line-height: 1; }
+        .kpi-lbl { font-size: 12px; color: var(--txt3); margin-top: 6px; }
+        .kpi-change {
+            font-size: 11px; margin-top: 8px;
+            display: flex; align-items: center; gap: 4px;
+        }
+        .kpi-change.up { color: var(--green); }
+        .kpi-change.down { color: var(--accent2); }
+
+        /* ===== DATA TABLE ===== */
+        .table-card {
+            background: var(--bg2);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            overflow: hidden;
+        }
+
+        .table-header {
+            padding: 18px 22px;
+            border-bottom: 1px solid var(--border);
+            display: flex; align-items: center; justify-content: space-between;
+        }
+
+        .table-header h3 { font-size: 15px; font-weight: 600; color: var(--txt); }
+        .table-header p { font-size: 12px; color: var(--txt3); margin-top: 3px; }
+
+        .table-toolbar {
+            padding: 12px 22px;
+            border-bottom: 1px solid var(--border);
+            display: flex; align-items: center; gap: 12px;
+        }
+
+        .search-input {
+            flex: 1;
+            background: var(--bg3);
+            border: 1px solid var(--border2);
+            border-radius: var(--radius-sm);
+            padding: 8px 14px 8px 36px;
+            color: var(--txt);
+            font-size: 13px;
+            font-family: 'Cairo', sans-serif;
+            position: relative;
+        }
+        .search-wrapper { position: relative; flex: 1; }
+        .search-wrapper i { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); color: var(--txt3); font-size: 16px; }
+        .search-input:focus { outline: none; border-color: var(--accent); }
+
+        .filter-select {
+            background: var(--bg3);
+            border: 1px solid var(--border2);
+            border-radius: var(--radius-sm);
+            padding: 8px 14px;
+            color: var(--txt2);
+            font-size: 13px;
+            font-family: 'Cairo', sans-serif;
+            cursor: pointer;
+        }
+
+        /* تفادي ضغط وتكدس الأعمدة في جدول المحاضرات */
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        table { width: 100%; border-collapse: collapse; min-width: 900px; }
+
+        th {
+            background: var(--bg3);
+            padding: 12px 18px;
+            text-align: right;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--txt3);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 14px 18px;
+            font-size: 13px;
+            color: var(--txt2);
+            border-top: 1px solid var(--border);
+            vertical-align: middle;
+        }
+
+        tr:hover td { background: rgba(255,255,255,0.02); color: var(--txt); }
+
+        .badge {
+            display: inline-flex; align-items: center;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 11px; font-weight: 600;
+        }
+        .badge-green { background: rgba(6,214,160,0.12); color: var(--green); }
+        .badge-red { background: rgba(230,57,70,0.12); color: var(--accent2); }
+        .badge-gold { background: rgba(244,162,97,0.12); color: var(--gold); }
+        .badge-blue { background: rgba(67,97,238,0.15); color: #7b9eff; }
+        .badge-gray { background: rgba(255,255,255,0.06); color: var(--txt3); }
+
+        .avatar-circle {
+            width: 34px; height: 34px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent), var(--gold));
+            display: inline-flex; align-items: center; justify-content: center;
+            font-size: 13px; font-weight: 700; color: #fff;
+        }
+
+        .action-btns { display: flex; gap: 6px; flex-wrap: nowrap; }
+        .action-btn {
+            width: 30px; height: 30px;
+            border-radius: 7px;
+            border: 1px solid var(--border2);
+            background: var(--bg3);
+            color: var(--txt2);
+            cursor: pointer;
+            display: inline-flex; align-items: center; justify-content: center;
+            font-size: 14px;
+            transition: all 0.15s;
+        }
+        .action-btn:hover { border-color: var(--accent); color: var(--accent2); }
+        .action-btn.danger:hover { border-color: var(--accent); background: rgba(230,57,70,0.12); }
+
+        /* ===== FORM PANEL ===== */
+        .form-panel {
+            background: var(--bg2);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            overflow: hidden;
+            max-width: 720px;
+        }
+
+        .form-panel-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border);
+            display: flex; align-items: center; gap: 12px;
+        }
+
+        .form-panel-icon {
+            width: 38px; height: 38px;
+            border-radius: 9px;
+            background: rgba(230,57,70,0.12);
+            color: var(--accent2);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 18px;
+        }
+
+        .form-panel-header h3 { font-size: 15px; font-weight: 600; }
+        .form-panel-header p { font-size: 12px; color: var(--txt3); margin-top: 2px; }
+
+        .form-body { padding: 24px; }
+
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+        .form-row.full { grid-template-columns: 1fr; }
+
+        .form-field label {
+            display: block;
+            font-size: 12px; font-weight: 600;
+            color: var(--txt3);
+            margin-bottom: 7px;
+            text-transform: uppercase; letter-spacing: 0.5px;
+        }
+
+        .form-field input,
+        .form-field select,
+        .form-field textarea {
+            width: 100%;
+            background: var(--bg3);
+            border: 1px solid var(--border2);
+            border-radius: var(--radius-sm);
+            padding: 10px 14px;
+            color: var(--txt);
+            font-size: 14px;
+            font-family: 'Cairo', sans-serif;
+            transition: border-color 0.18s;
+        }
+
+        .form-field input:focus,
+        .form-field select:focus,
+        .form-field textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(230,57,70,0.12);
+        }
+
+        .form-field input[type="file"] {
+            padding: 8px 12px;
+            cursor: pointer;
+        }
+
+        .form-field select option { background: var(--bg3); }
+
+        /* Grades pills */
+        .grades-grid {
+            display: flex; flex-wrap: wrap; gap: 8px;
+        }
+
+        .grade-pill {
+            display: flex; align-items: center; gap: 7px;
+            padding: 7px 14px;
+            border-radius: 20px;
+            border: 1px solid var(--border2);
+            background: var(--bg3);
+            cursor: pointer;
+            font-size: 12px; font-weight: 500;
+            color: var(--txt2);
+            transition: all 0.15s;
+            user-select: none;
+        }
+
+        .grade-pill input[type="checkbox"] { display: none; }
+
+        .grade-pill:hover { border-color: var(--accent); color: var(--txt); }
+
+        .grade-pill.checked {
+            background: rgba(230,57,70,0.12);
+            border-color: var(--accent);
+            color: var(--accent2);
+        }
+
+        .grade-pill .dot {
+            width: 7px; height: 7px;
+            border-radius: 50%;
+            border: 1.5px solid currentColor;
+        }
+        .grade-pill.checked .dot {
+            background: var(--accent2);
+            border-color: var(--accent2);
+        }
+
+        .form-footer {
+            padding: 16px 24px;
+            border-top: 1px solid var(--border);
+            display: flex; align-items: center; gap: 12px;
+        }
+
+        .btn-primary {
+            display: flex; align-items: center; gap: 8px;
+            padding: 10px 22px;
+            background: var(--accent);
+            border: none; border-radius: var(--radius-sm);
+            color: #fff; font-size: 14px; font-weight: 600;
+            font-family: 'Cairo', sans-serif;
+            cursor: pointer; transition: all 0.18s;
+        }
+        .btn-primary:hover { background: var(--accent2); transform: translateY(-1px); }
+
+        .btn-ghost {
+            display: flex; align-items: center; gap: 8px;
+            padding: 10px 18px;
+            background: transparent;
+            border: 1px solid var(--border2); border-radius: var(--radius-sm);
+            color: var(--txt2); font-size: 14px; font-weight: 500;
+            font-family: 'Cairo', sans-serif;
+            cursor: pointer; transition: all 0.18s;
+        }
+        .btn-ghost:hover { border-color: var(--txt2); color: var(--txt); }
+
+        /* ===== CODES SECTION ===== */
+        .codes-tabs {
+            display: flex; gap: 0;
+            border-bottom: 1px solid var(--border);
+            padding: 0 22px;
+        }
+
+        .code-tab {
+            padding: 12px 20px;
+            font-size: 13px; font-weight: 500;
+            color: var(--txt3);
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.15s;
+            background: none; border-top: none; border-right: none; border-left: none;
+            font-family: 'Cairo', sans-serif;
+        }
+        .code-tab.active { color: var(--accent2); border-bottom-color: var(--accent); }
+
+        .codes-panel { display: none; padding: 20px; }
+        .codes-panel.active { display: block; }
+
+        .code-row {
+            display: flex; align-items: center; gap: 12px;
+            padding: 12px 16px;
+            background: var(--bg3);
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+            margin-bottom: 8px;
+            transition: border-color 0.15s;
+        }
+        .code-row:hover { border-color: var(--border2); }
+
+        .code-mono {
+            font-family: monospace;
+            font-size: 15px; font-weight: 700;
+            color: var(--txt);
+            background: var(--bg2);
+            padding: 4px 10px;
+            border-radius: 6px;
+            border: 1px solid var(--border2);
+            letter-spacing: 1px;
+        }
+
+        .view-pips { display: flex; gap: 4px; }
+        .pip {
+            width: 10px; height: 10px;
+            border-radius: 50%;
+            border: 1.5px solid var(--txt3);
+        }
+        .pip.filled { background: var(--teal); border-color: var(--teal); }
+
+        /* ===== TEACHERS LIST ===== */
+        .teacher-row {
+            display: flex; align-items: center; gap: 14px;
+            padding: 14px 18px;
+            border-top: 1px solid var(--border);
+        }
+        .teacher-row:hover { background: rgba(255,255,255,0.02); }
+
+        .teacher-avatar {
+            width: 42px; height: 42px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--border2);
+        }
+        .teacher-avatar-placeholder {
+            width: 42px; height: 42px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--blue), var(--purple));
+            display: flex; align-items: center; justify-content: center;
+            font-size: 15px; font-weight: 700; color: #fff;
+        }
+
+        .teacher-info { flex: 1; }
+        .teacher-name-text { font-size: 14px; font-weight: 600; color: var(--txt); }
+        .teacher-meta { font-size: 12px; color: var(--txt3); margin-top: 3px; }
+
+        .teacher-grades { display: flex; flex-wrap: wrap; gap: 5px; }
+        .teacher-grade-tag {
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 10px;
+            background: rgba(67,97,238,0.12);
+            color: #7b9eff;
+        }
+
+        /* ===== GENERATE CODES ===== */
+        .gen-result {
+            background: var(--bg3);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .gen-codes-grid {
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;
+            margin-top: 16px;
+        }
+
+        .gen-code-chip {
+            font-family: monospace;
+            font-size: 14px; font-weight: 700;
+            padding: 10px;
+            background: var(--bg2);
+            border: 1px solid var(--border2);
+            border-radius: var(--radius-sm);
+            text-align: center;
+            color: var(--teal);
+            letter-spacing: 1px;
+        }
+
+        /* ===== ONLINE ===== */
+        .online-empty {
+            text-align: center; padding: 60px 20px;
+            color: var(--txt3);
+        }
+        .online-empty i { font-size: 48px; margin-bottom: 12px; display: block; }
+
+        /* ===== EMPTY STATE ===== */
+        .empty-state {
+            text-align: center; padding: 60px 20px;
+            color: var(--txt3);
+        }
+        .empty-state i { font-size: 48px; margin-bottom: 12px; display: block; color: var(--txt3); }
+        .empty-state p { font-size: 14px; }
+
+        /* ===== LOADING ===== */
+        .skeleton {
+            background: linear-gradient(90deg, var(--bg3) 25%, var(--surface) 50%, var(--bg3) 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+            border-radius: 6px;
+        }
+        @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+        /* ===== TOAST ===== */
+        #toast-container {
+            position: fixed;
+            bottom: 24px; right: 24px; /* تم تعديل الاتجاه من اليسار لليمين لمنع التداخل */
+            z-index: 9999;
+            display: flex; flex-direction: column; gap: 10px;
+        }
+
+        .toast {
+            display: flex; align-items: center; gap: 10px;
+            padding: 12px 18px;
+            background: var(--bg2);
+            border: 1px solid var(--border2);
+            border-radius: var(--radius-sm);
+            box-shadow: var(--shadow);
+            font-size: 13px; color: var(--txt);
+            animation: slideIn 0.25s ease;
+            min-width: 260px;
+        }
+        .toast.success { border-right: 3px solid var(--green); }
+        .toast.error { border-right: 3px solid var(--accent); }
+        .toast.info { border-right: 3px solid var(--blue); }
+
+        @keyframes slideIn { from { transform: translateY(20px); opacity: 0; } to { transform: none; opacity: 1; } }
+
+        /* ===== CONFIRM MODAL ===== */
+        .modal-bg {
+            display: none;
+            position: fixed; inset: 0;
+            background: rgba(0,0,0,0.65);
+            z-index: 999;
+            align-items: center; justify-content: center;
+        }
+        .modal-bg.open { display: flex; }
+
+        .modal-box {
+            background: var(--bg2);
+            border: 1px solid var(--border2);
+            border-radius: var(--radius);
+            padding: 28px 32px;
+            max-width: 380px; width: 90%;
+            text-align: center;
+        }
+        .modal-icon { font-size: 42px; margin-bottom: 12px; }
+        .modal-box h3 { font-size: 16px; font-weight: 600; margin-bottom: 8px; }
+        .modal-box p { font-size: 13px; color: var(--txt3); margin-bottom: 24px; }
+        .modal-actions { display: flex; gap: 10px; justify-content: center; }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 900px) {
+            .kpi-grid { grid-template-columns: 1fr 1fr; }
+            .form-row { grid-template-columns: 1fr; }
+        }
+
+        /* ===== MASAR NAVBAR ===== */
+        .masar-navbar {
+            background: var(--bg2);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 95;
+            padding: 0 24px;
+            box-shadow: 0 2px 16px rgba(0,0,0,0.15);
+        }
+
+        .masar-nav-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 64px;
+            max-width: 100%;
+            gap: 20px;
+        }
+
+        .masar-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            flex-shrink: 0;
+        }
+
+        .masar-logo-icon {
+            width: 36px; height: 36px;
+            background: linear-gradient(135deg, var(--accent), var(--gold));
+            border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 18px; font-weight: 900; color: #fff;
+        }
+
+        .masar-logo-text {
+            font-size: 15px; font-weight: 700;
+            color: var(--txt);
+            white-space: nowrap;
+        }
+
+        .masar-badge {
+            background: rgba(230,57,70,0.15);
+            color: var(--accent2);
+            border: 1px solid rgba(230,57,70,0.3);
+            padding: 2px 8px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .masar-nav-links {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            flex: 1;
+            justify-content: center;
+        }
+
+        .masar-link {
+            display: flex; align-items: center; gap: 6px;
+            padding: 8px 14px;
+            border-radius: var(--radius-sm);
+            color: var(--txt2);
+            text-decoration: none;
+            font-size: 13px; font-weight: 500;
+            transition: all 0.15s;
+        }
+
+        .masar-link:hover {
+            background: var(--bg3);
+            color: var(--txt);
+        }
+
+        .masar-nav-actions {
+            display: flex; align-items: center; gap: 12px;
+            flex-shrink: 0;
+        }
+
+        /* Theme Toggle Switch */
+        .masar-theme-toggle {
+            display: flex; align-items: center; gap: 8px;
+            cursor: pointer;
+            padding: 6px 10px;
+            border-radius: 20px;
+            border: 1px solid var(--border2);
+            background: var(--bg3);
+            transition: all 0.2s;
+            user-select: none;
+        }
+
+        .masar-theme-toggle:hover { border-color: var(--accent); }
+
+        .theme-icon { font-size: 14px; line-height: 1; }
+
+        .toggle-track {
+            width: 34px; height: 18px;
+            background: var(--bg2);
+            border-radius: 9px;
+            border: 1px solid var(--border2);
+            position: relative;
+            transition: background 0.3s;
+        }
+
+        .toggle-thumb {
+            width: 12px; height: 12px;
+            background: var(--accent);
+            border-radius: 50%;
+            position: absolute;
+            top: 2px; right: 2px;
+            transition: right 0.3s;
+        }
+
+        body.light-mode .toggle-thumb {
+            right: 18px;
+        }
+
+        body.light-mode .toggle-track {
+            background: rgba(230,57,70,0.1);
+        }
+
+        .masar-admin-info {
+            display: flex; align-items: center; gap: 8px;
+            padding: 6px 12px;
+            border-radius: var(--radius-sm);
+            background: var(--bg3);
+            border: 1px solid var(--border);
+        }
+
+        .admin-avatar {
+            font-size: 18px;
+        }
+
+        .admin-name {
+            font-size: 13px; font-weight: 600;
+            color: var(--txt);
+        }
+
+        .masar-logout-btn {
+            display: flex; align-items: center; gap: 6px;
+            padding: 8px 14px;
+            border-radius: var(--radius-sm);
+            background: rgba(230,57,70,0.1);
+            border: 1px solid rgba(230,57,70,0.25);
+            color: var(--accent2);
+            cursor: pointer; font-size: 13px; font-weight: 500;
+            font-family: 'Cairo', sans-serif;
+            transition: all 0.18s;
+        }
+
+        .masar-logout-btn:hover {
+            background: rgba(230,57,70,0.2);
+        }
+
+        /* Theme icon visibility */
+        .masar-theme-toggle .sun { opacity: 0.5; }
+        .masar-theme-toggle .moon { opacity: 1; }
+        body.light-mode .masar-theme-toggle .sun { opacity: 1; }
+        body.light-mode .masar-theme-toggle .moon { opacity: 0.5; }
+
+        body {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 64px;
+            right: 0;
+            bottom: 0;
+            z-index: 100;
+        }
+
+        .main {
+            margin-top: 0;
+        }
+
+        .topbar {
+            background: var(--bg2);
+            border-bottom: 1px solid var(--border);
+            padding: 0 32px;
+            height: 64px;
+            display: flex; align-items: center; justify-content: space-between;
+            position: sticky; top: 0; z-index: 90;
+        }
+
+        .topbar-title { font-size: 18px; font-weight: 700; color: var(--txt); }
+        .topbar-subtitle { font-size: 12px; color: var(--txt3); margin-top: 2px; }
+
+        .topbar-actions { display: flex; align-items: center; gap: 12px; }
+
+        .topbar-btn {
+            display: flex; align-items: center; gap: 8px;
+            padding: 8px 16px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border2);
+            background: var(--bg3);
+            color: var(--txt2);
+            cursor: pointer; font-size: 13px; font-weight: 500;
+            font-family: 'Cairo', sans-serif;
+            transition: all 0.18s;
+        }
+        .topbar-btn:hover { border-color: var(--accent); color: var(--accent2); }
+        .topbar-btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+        .topbar-btn.primary:hover { background: var(--accent2); }
+
+        /* ===== CONTENT ===== */
+        .content { padding: 28px 32px; flex: 1; }
+
+        .section { display: none; }
+        .section.active { display: block; }
+
+        /* ===== EDIT VIDEO MODAL ===== */
+        .modal-bg {
+            display: none;
+            position: fixed; inset: 0;
+            background: rgba(0,0,0,0.65);
+            z-index: 999;
+            align-items: center; justify-content: center;
+        }
+        .modal-bg.open { display: flex; }
+
+        .modal-box {
+            background: var(--bg2);
+            border: 1px solid var(--border2);
+            border-radius: var(--radius);
+            padding: 28px 32px;
+            max-width: 380px; width: 90%;
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
-    <header>
-        <div class="header-inner">
-            <div class="header-left">
-                <div class="logo">
-                    <span class="logo-mark">
-                        <img class="logo-dark" src="imges/logo.png" alt="MASAR-مَســـار logo dark">
-                        <img class="logo-light" src="imges/logo2.png" alt="MASAR-مَســـار logo light">
-                    </span>
-                    <span>لوحة تحكم الأستاذ</span>
-                </div>
-                <div class="header-icons">
-                    <button class="icon-btn theme-switcher" data-theme="light" aria-label="وضع النهار">☀</button>
-                    <button class="icon-btn theme-switcher" data-theme="dark" aria-label="وضع الظلام">🌙</button>
-                </div>
-            </div>
-            <nav class="header-actions">
-                <a href="index.html" class="btn-outline">خروج</a>
-            </nav>
-        </div>
-    </header>
 
-    <div class="admin-container">
-        <aside class="sidebar">
-            <h3>القوائم</h3>
-            <ul>
-                <li><button onclick="showSection('users')" class="active">المستخدمون</button></li>
-                <li><button onclick="showSection('codes')">الأكواد</button></li>
-                <li><button onclick="showSection('online')">المتصلين حالياً</button></li>
-                <li><button onclick="showSection('add-video')">إضافة فيديو</button></li>
-                <li><button onclick="showSection('generate-codes')">توليد أكواد</button></li>
-                <li><button onclick="showSection('teachers')">إدارة المعلمين</button></li>
-            </ul>
-        </aside>
-        <main class="main-content">
-            <div id="users-list"></div>
-            <div id="codes-list" style="display: none;"></div>
-            <div id="online-list" style="display: none;"><h3 id="online">المتصلين حالياً</h3><p>لا يوجد متصلين (محاكاة)</p></div>
-            <div id="add-video" style="display: none;">
-                <h3>إضافة فيديو جديد</h3>
-                <form onsubmit="handleAddVideo(event)" class="form-container">
-                    <div class="form-group"><label>عنوان الفيديو</label><input type="text" required></div>
-                    <div class="form-group"><label>رابط الفيديو</label><input type="text"></div>
-                    <div class="form-group"><label>السعر</label><input type="number" required></div>
-                    <div class="form-group"><label>صورة الفيديو</label><input type="file" accept="image/*" required></div>
-                    <div class="form-group"><label>ملف الفيديو</label><input type="file" accept="video/*"></div>
-                    <button type="submit" class="btn-red">رفع الفيديو</button>
-                </form>
+<!-- ==================== NAVBAR (نافبار المنصة) ==================== -->
+<nav class="masar-navbar" id="adminNavbar">
+    <div class="masar-nav-inner">
+        <!-- Logo -->
+        <div class="masar-logo">
+            <span class="masar-logo-icon">م</span>
+            <span class="masar-logo-text">MASAR-مَسـار</span>
+            <span class="masar-badge">أدمن</span>
+        </div>
+
+        <!-- Center Links -->
+        <div class="masar-nav-links">
+            <a href="index.html" class="masar-link" target="_blank">
+                <i class="ti ti-home"></i> الرئيسية
+            </a>
+            <a href="teachers.html" class="masar-link" target="_blank">
+                <i class="ti ti-users"></i> المعلمين
+            </a>
+        </div>
+
+        <!-- Actions -->
+        <div class="masar-nav-actions">
+            <!-- Theme Toggle -->
+            <div class="masar-theme-toggle" id="themeToggle" onclick="toggleAdminTheme()" title="تبديل الوضع">
+                <span class="theme-icon sun">☀️</span>
+                <span class="toggle-track">
+                    <span class="toggle-thumb"></span>
+                </span>
+                <span class="theme-icon moon">🌙</span>
             </div>
-            <div id="generate-codes" style="display: none;">
-                <h3>توليد أكواد شحن</h3>
-                <form onsubmit="handleGenerateCodes(event)" class="form-container">
-                    <div class="form-group"><label>اختر الفيديو</label><select required onchange="setPrice(this.value)"></select></div>
-                    <div class="form-group"><label>عدد الأكواد</label><input type="number" required></div>
-                    <div class="form-group"><label>قيمة الكود (جنية)</label><input type="number" required id="code-price"></div>
-                    <button type="submit" class="btn-red">توليد وتصدير CSV</button>
-                </form>
+
+            <!-- Admin Badge -->
+            <div class="masar-admin-info">
+                <div class="admin-avatar">👑</div>
+                <span class="admin-name">الإدارة</span>
             </div>
-            <div id="teachers-section" style="display: none;">
-                <h3>إدارة المعلمين</h3>
-                <form onsubmit="handleAddTeacher(event)" class="form-container">
-                    <div class="form-group"><label>اسم المعلم</label><input type="text" id="teacher-name" required></div>
-                    <div class="form-group"><label>المادة الدراسية</label><input type="text" id="teacher-subject" required></div>
-                    <div class="form-group"><label>نبذة عن المعلم</label><input type="text" id="teacher-bio" required></div>
-                    <div class="form-group"><label>صورة المعلم</label><input type="file" id="teacher-image" accept="image/*" required></div>
-                    <div class="form-group">
-                        <label>الصفوف الدراسية</label>
-                        <div class="grades-checkboxes-container">
-                            <label><input type="checkbox" name="teacher-grades-check" value="الصف الأول الإعدادي"> الصف الأول الإعدادي</label>
-                            <label><input type="checkbox" name="teacher-grades-check" value="الصف الثاني الإعدادي"> الصف الثاني الإعدادي</label>
-                            <label><input type="checkbox" name="teacher-grades-check" value="الصف الثالث الإعدادي"> الصف الثالث الإعدادي</label>
-                            <label><input type="checkbox" name="teacher-grades-check" value="الصف الأول الثانوي"> الأول الثانوي</label>
-                            <label><input type="checkbox" name="teacher-grades-check" value="الصف الثاني الثانوي"> الثاني الثانوي</label>
-                            <label><input type="checkbox" name="teacher-grades-check" value="الصف الثالث الثانوي"> الثالث الثانوي</label>
+
+            <!-- Logout -->
+            <button class="masar-logout-btn" onclick="window.location.href='index.html'">
+                <i class="ti ti-logout"></i> خروج
+            </button>
+        </div>
+    </div>
+</nav>
+
+<!-- ==================== SIDEBAR ==================== -->
+<aside class="sidebar">
+    <div class="sidebar-logo">
+        <div class="brand">
+            <div class="logo-icon">م</div>
+            <div>
+                <div class="brand-name">MASAR</div>
+                <div class="brand-sub">لوحة تحكم الإدارة</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="sidebar-stats">
+        <div class="mini-stat">
+            <div class="val" id="sb-users">—</div>
+            <div class="lbl">طالب</div>
+        </div>
+        <div class="mini-stat">
+            <div class="val" id="sb-codes">—</div>
+            <div class="lbl">كود</div>
+        </div>
+        <div class="mini-stat">
+            <div class="val" id="sb-videos">—</div>
+            <div class="lbl">فيديو</div>
+        </div>
+        <div class="mini-stat">
+            <div class="val" id="sb-teachers">—</div>
+            <div class="lbl">معلم</div>
+        </div>
+    </div>
+
+    <nav class="sidebar-nav">
+        <div class="nav-group-title">الرئيسية</div>
+        <button class="nav-item active" onclick="showSection('overview', this)">
+            <i class="ti ti-layout-dashboard"></i>
+            نظرة عامة
+        </button>
+        <button class="nav-item" onclick="showSection('users', this)">
+            <i class="ti ti-users"></i>
+            الطلاب
+            <span class="nav-badge" id="nav-users-count">0</span>
+        </button>
+
+        <div class="nav-group-title">المحتوى</div>
+        <button class="nav-item" onclick="showSection('add-video', this)">
+            <i class="ti ti-video-plus"></i>
+            إضافة فيديو
+        </button>
+        <button class="nav-item" onclick="showSection('manage-videos', this)">
+            <i class="ti ti-video-off"></i>
+            التحكم بالفيديوهات
+        </button>
+        <button class="nav-item" onclick="showSection('teachers', this)">
+            <i class="ti ti-school"></i>
+            إدارة المعلمين
+        </button>
+
+        <div class="nav-group-title">الأكواد</div>
+        <button class="nav-item" onclick="showSection('codes', this)">
+            <i class="ti ti-ticket"></i>
+            إدارة الأكواد
+            <span class="nav-badge" id="nav-codes-count">0</span>
+        </button>
+        <button class="nav-item" onclick="showSection('generate-codes', this)">
+            <i class="ti ti-qrcode"></i>
+            توليد أكواد
+        </button>
+
+        <div class="nav-group-title">النظام</div>
+        <button class="nav-item" onclick="showSection('online', this)">
+            <i class="ti ti-wifi"></i>
+            المتصلون الآن
+            <span class="nav-badge" style="background: var(--green);">0</span>
+        </button>
+    </nav>
+
+    <div class="sidebar-footer">
+        <button class="logout-btn" onclick="window.location.href='index.html'">
+            <i class="ti ti-logout"></i>
+            خروج من لوحة التحكم
+        </button>
+    </div>
+</aside>
+
+<!-- ==================== MAIN ==================== -->
+<main class="main">
+
+    <!-- TOPBAR -->
+    <div class="topbar" id="topbar">
+        <div>
+            <div class="topbar-title" id="topbar-title">نظرة عامة</div>
+            <div class="topbar-subtitle" id="topbar-sub">مرحباً بك في لوحة تحكم MASAR</div>
+        </div>
+        <div class="topbar-actions">
+            <button class="topbar-btn" onclick="refreshData()">
+                <i class="ti ti-refresh"></i>
+                تحديث
+            </button>
+            <button class="topbar-btn primary" id="topbar-action-btn" style="display:none"></button>
+        </div>
+    </div>
+
+    <div class="content">
+
+        <!-- ===== OVERVIEW ===== -->
+        <div id="section-overview" class="section active">
+            <div class="kpi-grid">
+                <div class="kpi-card red">
+                    <div class="kpi-icon"><i class="ti ti-users"></i></div>
+                    <div class="kpi-val" id="kpi-users">0</div>
+                    <div class="kpi-lbl">إجمالي الطلاب</div>
+                    <div class="kpi-change up"><i class="ti ti-trending-up"></i> نشط</div>
+                </div>
+                <div class="kpi-card gold">
+                    <div class="kpi-icon"><i class="ti ti-ticket"></i></div>
+                    <div class="kpi-val" id="kpi-codes">0</div>
+                    <div class="kpi-lbl">إجمالي الأكواد</div>
+                    <div class="kpi-change" id="kpi-codes-sub" style="color:var(--txt3)">جاري التحميل...</div>
+                </div>
+                <div class="kpi-card teal">
+                    <div class="kpi-icon"><i class="ti ti-video"></i></div>
+                    <div class="kpi-val" id="kpi-videos">0</div>
+                    <div class="kpi-lbl">الفيديوهات المرفوعة</div>
+                    <div class="kpi-change up"><i class="ti ti-check"></i> متاحة</div>
+                </div>
+                <div class="kpi-card blue">
+                    <div class="kpi-icon"><i class="ti ti-school"></i></div>
+                    <div class="kpi-val" id="kpi-teachers">0</div>
+                    <div class="kpi-lbl">المعلمون</div>
+                    <div class="kpi-change up"><i class="ti ti-check"></i> نشطون</div>
+                </div>
+            </div>
+
+            <!-- Recent users -->
+            <div class="table-card">
+                <div class="table-header">
+                    <div>
+                        <h3>آخر الطلاب المسجلين</h3>
+                        <p>أحدث 5 طلاب انضموا للمنصة</p>
+                    </div>
+                    <button class="topbar-btn" onclick="showSection('users', document.querySelector('.nav-item:nth-child(2)'))">
+                        <i class="ti ti-arrow-left"></i> عرض الكل
+                    </button>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>الطالب</th>
+                            <th>رقم الهاتف</th>
+                            <th>الصف</th>
+                            <th>المحافظة</th>
+                        </tr>
+                    </thead>
+                    <tbody id="overview-users-table">
+                        <tr><td colspan="4" style="text-align:center; padding: 30px; color: var(--txt3);">جاري التحميل...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ===== USERS ===== -->
+        <div id="section-users" class="section">
+            <div class="table-card">
+                <div class="table-header">
+                    <div>
+                        <h3>قائمة الطلاب</h3>
+                        <p id="users-count-label">جاري التحميل...</p>
+                    </div>
+                </div>
+                <div class="table-toolbar">
+                    <div class="search-wrapper">
+                        <i class="ti ti-search"></i>
+                        <input type="text" class="search-input" placeholder="ابحث بالاسم أو رقم الهاتف..." oninput="filterUsers(this.value)">
+                    </div>
+                    <select class="filter-select" onchange="filterUsersByGrade(this.value)">
+                        <option value="">كل الصفوف</option>
+                        <option>الصف الأول الإعدادي</option>
+                        <option>الصف الثاني الإعدادي</option>
+                        <option>الصف الثالث الإعدادي</option>
+                        <option>الصف الأول الثانوي</option>
+                        <option>الصف الثاني الثانوي</option>
+                        <option>الصف الثالث الثانوي</option>
+                    </select>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>الطالب</th>
+                            <th>رقم الهاتف</th>
+                            <th>الصف الدراسي</th>
+                            <th>المحافظة</th>
+                            <th>الشعبة</th>
+                            <th>إجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody id="users-table-body">
+                        <tr><td colspan="6" style="text-align:center; padding: 40px; color: var(--txt3);">جاري التحميل...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ===== CODES ===== -->
+        <div id="section-codes" class="section">
+            <div class="table-card">
+                <div class="table-header">
+                    <div>
+                        <h3>إدارة أكواد الشحن</h3>
+                        <p id="codes-count-label">جاري التحميل...</p>
+                    </div>
+                    <button class="topbar-btn" onclick="confirmClearCodes()" style="border-color: rgba(230,57,70,0.4); color: var(--accent2);">
+                        <i class="ti ti-trash"></i> مسح الكل
+                    </button>
+                </div>
+                <div class="codes-tabs">
+                    <button class="code-tab active" onclick="switchCodeTab('active', this)">المفعّلة</button>
+                    <button class="code-tab" onclick="switchCodeTab('inactive', this)">غير المفعّلة</button>
+                    <button class="code-tab" onclick="switchCodeTab('all', this)">الكل</button>
+                </div>
+                <div class="codes-panel active" id="codes-panel-active"></div>
+                <div class="codes-panel" id="codes-panel-inactive"></div>
+                <div class="codes-panel" id="codes-panel-all"></div>
+            </div>
+        </div>
+
+        <!-- ===== ONLINE ===== -->
+        <div id="section-online" class="section">
+            <div class="table-card">
+                <div class="table-header">
+                    <div><h3>المتصلون الآن</h3><p>الطلاب النشطون على المنصة</p></div>
+                </div>
+                <div class="online-empty">
+                    <i class="ti ti-wifi-off"></i>
+                    <p>لا يوجد طلاب متصلون حالياً</p>
+                    <p style="font-size: 12px; margin-top: 8px; color: var(--txt3);">ستظهر هنا بيانات الاتصال المباشر</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== ADD VIDEO ===== -->
+        <div id="section-add-video" class="section">
+            <div class="form-panel">
+                <div class="form-panel-header">
+                    <div class="form-panel-icon"><i class="ti ti-video-plus"></i></div>
+                    <div>
+                        <h3>إضافة فيديو جديد</h3>
+                        <p>أضف محاضرة أو فيديو تعليمي جديد للمنصة</p>
+                    </div>
+                </div>
+                <form onsubmit="handleAdminAddVideo(event)">
+                    <div class="form-body">
+                        <div class="form-row">
+                            <div class="form-field">
+                                <label>عنوان الفيديو *</label>
+                                <input type="text" name="title" placeholder="مثال: شرح المعادلات التفاضلية" required>
+                            </div>
+                            <div class="form-field">
+                                <label>السعر (جنيه) *</label>
+                                <input type="number" name="price" placeholder="0" required min="0">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-field">
+                                <label>اختر المعلم لهذه المحاضرة *</label>
+                                <select name="teacherId" required>
+                                    <option value="">-- اختر معلماً --</option>
+                                </select>
+                            </div>
+                            <div class="form-field">
+                                <label>رابط الفيديو الخارجي</label>
+                                <input type="text" name="link" placeholder="https://... (اختياري إذا تم رفع ملف)">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-field">
+                                <label>صورة الغلاف *</label>
+                                <input type="file" name="image" accept="image/*" required>
+                            </div>
+                            <div class="form-field">
+                                <label>ملف الفيديو</label>
+                                <input type="file" name="video" accept="video/*">
+                            </div>
+                        </div>
+                        <div class="form-row full">
+                            <div class="form-field">
+                                <label>الصفوف الدراسية المستهدفة *</label>
+                                <div class="grades-grid" id="video-grades-pills">
+                                    <label class="grade-pill"><input type="checkbox" name="video-grades-check" value="الصف الأول الإعدادي"><span class="dot"></span> أول إعدادي</label>
+                                    <label class="grade-pill"><input type="checkbox" name="video-grades-check" value="الصف الثاني الإعدادي"><span class="dot"></span> ثاني إعدادي</label>
+                                    <label class="grade-pill"><input type="checkbox" name="video-grades-check" value="الصف الثالث الإعدادي"><span class="dot"></span> ثالث إعدادي</label>
+                                    <label class="grade-pill"><input type="checkbox" name="video-grades-check" value="الصف الأول الثانوي"><span class="dot"></span> أول ثانوي</label>
+                                    <label class="grade-pill"><input type="checkbox" name="video-grades-check" value="الصف الثاني الثانوي"><span class="dot"></span> ثاني ثانوي</label>
+                                    <label class="grade-pill"><input type="checkbox" name="video-grades-check" value="الصف الثالث الثانوي"><span class="dot"></span> ثالث ثانوي</label>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <button type="submit" class="btn-red">إضافة معلم</button>
+                    <div class="form-footer">
+                        <button type="submit" class="btn-primary"><i class="ti ti-upload"></i> رفع الفيديو</button>
+                        <button type="reset" class="btn-ghost" onclick="resetPills('video-grades-pills')"><i class="ti ti-x"></i> إعادة تعيين</button>
+                    </div>
                 </form>
-                <div id="teachers-list-admin" style="margin-top: 20px;"></div>
             </div>
-        </main>
+        </div>
+
+        <!-- ===== GENERATE CODES ===== -->
+        <div id="section-generate-codes" class="section">
+            <div class="form-panel">
+                <div class="form-panel-header">
+                    <div class="form-panel-icon"><i class="ti ti-qrcode"></i></div>
+                    <div>
+                        <h3>توليد أكواد شحن</h3>
+                        <p>أنشئ أكواداً جديدة وصدّرها بصيغة CSV</p>
+                    </div>
+                </div>
+                <form onsubmit="handleGenerateCodes(event)">
+                    <div class="form-body">
+                        <div class="form-row">
+                            <div class="form-field">
+                                <label>اختر الفيديو *</label>
+                                <select name="videoSelect" required onchange="setPrice(this.value)">
+                                    <option value="">-- اختر فيديو --</option>
+                                </select>
+                            </div>
+                            <div class="form-field">
+                                <label>قيمة الكود (جنيه) *</label>
+                                <input type="number" id="code-price" name="price" placeholder="0" required min="1">
+                            </div>
+                        </div>
+                        <div class="form-row full">
+                            <div class="form-field">
+                                <label>عدد الأكواد المطلوبة *</label>
+                                <input type="number" name="count" placeholder="مثال: 50" required min="1" max="500">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-footer">
+                        <button type="submit" class="btn-primary"><i class="ti ti-file-download"></i> تفعيل وتصدير CSV</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="gen-result" id="gen-result" style="display:none; max-width:720px; margin-top:20px;">
+                <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
+                    <h4 style="font-size:14px; font-weight:600;">الأكواد المُنشأة (<span id="gen-count">0</span>)</h4>
+                    <button class="btn-ghost" onclick="copyAllCodes()" style="font-size:12px; padding:6px 12px;">
+                        <i class="ti ti-copy"></i> نسخ الكل
+                    </button>
+                </div>
+                <div class="gen-codes-grid" id="gen-codes-display"></div>
+            </div>
+        </div>
+
+        <!-- ===== TEACHERS ===== -->
+        <div id="section-teachers" class="section">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: start;">
+
+                <!-- Form -->
+                <div class="form-panel">
+                    <div class="form-panel-header">
+                        <div class="form-panel-icon"><i class="ti ti-user-plus"></i></div>
+                        <div>
+                            <h3>إضافة معلم جديد</h3>
+                            <p>أضف معلماً وحدد مواده وصفوفه</p>
+                        </div>
+                    </div>
+                    <form onsubmit="handleAdminAddTeacher(event)">
+                        <div class="form-body">
+                            <div class="form-row full">
+                                <div class="form-field">
+                                    <label>اسم المعلم *</label>
+                                    <input type="text" id="teacher-name" placeholder="مثال: أ. محمد أحمد" required>
+                                </div>
+                            </div>
+                            <div class="form-row full">
+                                <div class="form-field">
+                                    <label>المادة الدراسية *</label>
+                                    <input type="text" id="teacher-subject" placeholder="مثال: الرياضيات" required>
+                                </div>
+                            </div>
+                            <div class="form-row full">
+                                <div class="form-field">
+                                    <label>نبذة عن المعلم *</label>
+                                    <input type="text" id="teacher-bio" placeholder="خبرة 10 سنوات..." required>
+                                </div>
+                            </div>
+                            <div class="form-row full">
+                                <div class="form-field">
+                                    <label>صورة المعلم *</label>
+                                    <input type="file" id="teacher-image" accept="image/*" required>
+                                </div>
+                            </div>
+                            <div class="form-row full">
+                                <div class="form-field">
+                                    <label>الصفوف الدراسية *</label>
+                                    <div class="grades-grid" id="teacher-grades-pills">
+                                        <label class="grade-pill"><input type="checkbox" name="teacher-grades-check" value="الصف الأول الإعدادي"><span class="dot"></span> أول إعدادي</label>
+                                        <label class="grade-pill"><input type="checkbox" name="teacher-grades-check" value="الصف الثاني الإعدادي"><span class="dot"></span> ثاني إعدادي</label>
+                                        <label class="grade-pill"><input type="checkbox" name="teacher-grades-check" value="الصف الثالث الإعدادي"><span class="dot"></span> ثالث إعدادي</label>
+                                        <label class="grade-pill"><input type="checkbox" name="teacher-grades-check" value="الصف الأول الثانوي"><span class="dot"></span> أول ثانوي</label>
+                                        <label class="grade-pill"><input type="checkbox" name="teacher-grades-check" value="الصف الثاني الثانوي"><span class="dot"></span> ثاني ثانوي</label>
+                                        <label class="grade-pill"><input type="checkbox" name="teacher-grades-check" value="الصف الثالث الثانوي"><span class="dot"></span> ثالث ثانوي</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-footer">
+                            <button type="submit" class="btn-primary"><i class="ti ti-plus"></i> إضافة معلم</button>
+                            <button type="reset" class="btn-ghost" onclick="resetPills('teacher-grades-pills')"><i class="ti ti-x"></i> إعادة تعيين</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Teachers list -->
+                <div class="table-card">
+                    <div class="table-header">
+                        <div>
+                            <h3>المعلمون المضافون</h3>
+                            <p id="teachers-count-label">جاري التحميل...</p>
+                        </div>
+                    </div>
+                    <div id="teachers-list-admin"></div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- ===== CONTROL & MANAGE VIDEOS ===== -->
+        <div id="section-manage-videos" class="section">
+            <div class="table-card">
+                <div class="table-header">
+                    <div>
+                        <h3>التحكم بالفيديوهات</h3>
+                        <p>قفل، فتح، تعديل، أو حذف المحاضرات المرفوعة</p>
+                    </div>
+                </div>
+                <div class="table-toolbar">
+                    <select class="filter-select" id="manage-teacher-select" onchange="filterManageVideos()">
+                        <option value="">كل المعلمين</option>
+                    </select>
+                    <select class="filter-select" id="manage-grade-select" onchange="filterManageVideos()">
+                        <option value="">كل الصفوف الدراسية</option>
+                        <option>الصف الأول الإعدادي</option>
+                        <option>الصف الثاني الإعدادي</option>
+                        <option>الصف الثالث الإعدادي</option>
+                        <option>الصف الأول الثانوي</option>
+                        <option>الصف الثاني الثانوي</option>
+                        <option>الصف الثالث الثانوي</option>
+                    </select>
+                </div>
+                <!-- إضافة فئة الاستجابة لحماية الجدول من التكدس -->
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>المحاضرة</th>
+                                <th>المعلم</th>
+                                <th>السعر</th>
+                                <th>الصفوف</th>
+                                <th>الحالة</th>
+                                <th>إجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody id="manage-videos-table-body">
+                            <tr><td colspan="6" style="text-align:center; padding: 40px; color: var(--txt3);">يرجى اختيار المعلم أو المرحلة...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== EDIT VIDEO MODAL ===== -->
+        <div class="modal-bg" id="editVideoModal">
+            <div class="modal-box" style="max-width: 500px; text-align: right;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; border-bottom:1px solid var(--border2); padding-bottom:10px;">
+                    <h3 style="margin:0;">📝 تعديل بيانات المحاضرة</h3>
+                    <button onclick="closeEditModal()" style="background:none; border:none; color:var(--txt2); cursor:pointer; font-size:1.2rem;">✕</button>
+                </div>
+                <form onsubmit="handleSaveEditVideo(event)">
+                    <input type="hidden" id="edit-video-id">
+                    <div class="form-field" style="margin-bottom:15px;">
+                        <label>عنوان المحاضرة *</label>
+                        <input type="text" id="edit-video-title" required>
+                    </div>
+                    <div class="form-field" style="margin-bottom:15px;">
+                        <label>السعر (جنيه) *</label>
+                        <input type="number" id="edit-video-price" required min="0">
+                    </div>
+                    <div class="form-field" style="margin-bottom:20px;">
+                        <label>رابط الفيديو الخارجي</label>
+                        <input type="text" id="edit-video-link">
+                    </div>
+                    <div style="display:flex; gap:10px; justify-content:flex-end;">
+                        <button type="submit" class="btn-primary">حفظ التغييرات</button>
+                        <button type="button" class="btn-ghost" onclick="closeEditModal()">إلغاء</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    </div><!-- /content -->
+</main>
+
+<!-- ===== CONFIRM MODAL ===== -->
+<div class="modal-bg" id="confirmModal">
+    <div class="modal-box">
+        <div class="modal-icon">🗑️</div>
+        <h3 id="modal-title">تأكيد الحذف</h3>
+        <p id="modal-msg">هل أنت متأكد؟ لا يمكن التراجع عن هذا الإجراء.</p>
+        <div class="modal-actions">
+            <button class="btn-primary" id="modal-confirm-btn" style="background: var(--accent);">تأكيد</button>
+            <button class="btn-ghost" onclick="closeModal()">إلغاء</button>
+        </div>
     </div>
-    <script src="script.js" defer></script>
+</div>
+
+<!-- ===== TOAST ===== -->
+<div id="toast-container"></div>
+
+<script src="script.js" defer></script>
+<script>
+    // ===== SECURITY GUARD (الحاجز الأمني لحماية لوحة الإدارة) =====
+const currentUserGuard = JSON.parse(localStorage.getItem('currentUser'));
+if (!currentUserGuard || currentUserGuard.role !== 'admin') {
+    // إذا لم يكن مسجل الدخول، أو كان طالباً عادياً، يتم طرده فوراً لصفحة الدخول الإدارية
+    window.location.href = 'admin-login.html';
+}
+const API = window.location.origin;
+let _users = [], _codes = [], _videos = [], _teachers = [];
+let _activeCodeTab = 'active';
+let _userFilter = '', _gradeFilter = '';
+let _pendingConfirm = null;
+let _lastGenCodes = [];
+
+
+// ===== TOAST =====
+function toast(msg, type = 'info') {
+    const c = document.getElementById('toast-container');
+    const t = document.createElement('div');
+    const icons = { success: 'ti-check', error: 'ti-x', info: 'ti-info-circle' };
+    t.className = `toast ${type}`;
+    t.innerHTML = `<i class="ti ${icons[type] || 'ti-info-circle'}" style="font-size:18px"></i> ${msg}`;
+    c.appendChild(t);
+    setTimeout(() => t.remove(), 3500);
+}
+
+// ===== MODAL =====
+function showModal(title, msg, onConfirm) {
+    document.getElementById('modal-title').textContent = title;
+    document.getElementById('modal-msg').textContent = msg;
+    document.getElementById('confirmModal').classList.add('open');
+    _pendingConfirm = onConfirm;
+}
+function closeModal() { document.getElementById('confirmModal').classList.remove('open'); _pendingConfirm = null; }
+document.getElementById('modal-confirm-btn').onclick = () => { if (_pendingConfirm) _pendingConfirm(); closeModal(); };
+
+// ===== GRADE PILLS =====
+document.querySelectorAll('.grade-pill').forEach(pill => {
+    pill.addEventListener('click', () => {
+        const cb = pill.querySelector('input[type="checkbox"]');
+        setTimeout(() => pill.classList.toggle('checked', cb.checked), 0);
+    });
+});
+
+function resetPills(containerId) {
+    document.querySelectorAll(`#${containerId} .grade-pill`).forEach(p => {
+        p.classList.remove('checked');
+        p.querySelector('input').checked = false;
+    });
+}
+
+// ===== NAVIGATION =====
+function showSection(name, btn) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.getElementById(`section-${name}`).classList.add('active');
+    document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+
+    const titles = {
+        overview: ['نظرة عامة', 'إحصائيات المنصة الشاملة'],
+        users: ['الطلاب', 'قائمة الطلاب المسجلين'],
+        codes: ['إدارة الأكواد', 'تتبع وإدارة أكواد الشحن'],
+        online: ['المتصلون الآن', 'الطلاب النشطون على المنصة'],
+        'add-video': ['إضافة فيديو', 'رفع محاضرة جديدة للمنصة'],
+        'generate-codes': ['توليد أكواد', 'إنشاء وتصدير أكواد الشحن'],
+        teachers: ['إدارة المعلمين', 'إضافة وحذف المعلمين'],
+        'manage-videos': ['التحكم بالفيديوهات', 'إدارة وتعديل وقفل الفيديوهات المرفوعة']
+    };
+    const [title, sub] = titles[name] || ['لوحة التحكم', ''];
+    document.getElementById('topbar-title').textContent = title;
+    document.getElementById('topbar-sub').textContent = sub;
+}
+
+// ===== LOAD DATA =====
+async function loadAll() {
+    try {
+        const [uR, cR, vR, tR] = await Promise.all([
+            fetch(`${API}/api/users`), fetch(`${API}/api/codes`),
+            fetch(`${API}/api/videos`), fetch(`${API}/api/teachers`)
+        ]);
+        _users = await uR.json();
+        _codes = await cR.json();
+        _videos = await vR.json();
+        _teachers = await tR.json();
+    } catch(e) {
+        _users = JSON.parse(localStorage.getItem('users')) || [];
+        _codes = JSON.parse(localStorage.getItem('codes')) || [];
+        _videos = JSON.parse(localStorage.getItem('videos')) || [];
+        _teachers = [];
+        toast('تعذّر الاتصال بالخادم، البيانات محلية', 'error');
+    }
+    updateAll();
+}
+
+async function refreshData() {
+    toast('جاري تحديث البيانات...', 'info');
+    await loadAll();
+    toast('تم تحديث البيانات بنجاح', 'success');
+}
+
+function updateAll() {
+    updateSidebarStats();
+    renderOverviewTable();
+    renderUsersTable();
+    renderCodesPanels();
+    renderTeachersAdmin();
+    populateVideoSelectAdmin();
+    populateTeacherSelectAdmin(); // تعبئة قائمة المعلمين لربط الفيديوهات بهم
+    populateManageFilters();
+    renderManageVideosTable();
+}
+
+// تعبئة فلتر المعلمين داخل صفحة التحكم بالفيديوهات
+function populateManageFilters() {
+    const sel = document.getElementById('manage-teacher-select');
+    if (!sel) return;
+    sel.innerHTML = '<option value="">كل المعلمين</option>';
+    _teachers.forEach(t => {
+        sel.innerHTML += `<option value="${t._id}">${t.name}</option>`;
+    });
+}
+
+// رندر جدول المحاضرات للتحكم بها
+function renderManageVideosTable() {
+    const tb = document.getElementById('manage-videos-table-body');
+    if (!tb) return;
+
+    const tFilter = document.getElementById('manage-teacher-select').value;
+    const gFilter = document.getElementById('manage-grade-select').value;
+
+    let list = [..._videos];
+    if (tFilter) list = list.filter(v => v.teacherId === tFilter);
+    if (gFilter) list = list.filter(v => v.grades && v.grades.includes(gFilter));
+
+    if (!list.length) {
+        tb.innerHTML = '<tr><td colspan="6" style="text-align:center; padding: 40px; color: var(--txt3);">لا توجد محاضرات تطابق الفلاتر المحددة</td></tr>';
+        return;
+    }
+
+    tb.innerHTML = list.map(v => {
+        const teacher = _teachers.find(t => t._id === v.teacherId);
+        const tName = teacher ? teacher.name : '—';
+        const statusBadge = v.closed 
+            ? '<span class="badge badge-red">مغلقة 🔒</span>' 
+            : '<span class="badge badge-green">مفتوحة 🔓</span>';
+
+        return `
+            <tr>
+                <td style="font-weight:600; color:var(--txt)">${v.title}</td>
+                <td>${tName}</td>
+                <td>${v.price || 0} ج.م</td>
+                <td><div style="display:flex; flex-wrap:wrap; gap:4px;">${(v.grades || []).map(g => `<span class="badge badge-blue" style="font-size:10px; padding:2px 6px;">${g.replace('الصف ','')}</span>`).join('')}</div></td>
+                <td>${statusBadge}</td>
+                <td>
+                    <div class="action-btns">
+                        <button class="action-btn" onclick="toggleVideoStatus('${v._id}')" title="${v.closed ? 'فتح للمشاهدة' : 'قفل المشاهدة'}">
+                            <i class="ti ${v.closed ? 'ti-lock-open' : 'ti-lock'}"></i>
+                        </button>
+                        <button class="action-btn" onclick="openEditVideoModal('${v._id}')" title="تعديل">
+                            <i class="ti ti-edit"></i>
+                        </button>
+                        <button class="action-btn danger" onclick="confirmDeleteVideo('${v._id}','${v.title}')" title="حذف">
+                            <i class="ti ti-trash"></i>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+        `;
+    }).join('');
+}
+
+window.filterManageVideos = function() {
+    renderManageVideosTable();
+};
+
+// تفعيل قفل/فتح المحاضرة
+window.toggleVideoStatus = function(id) {
+    fetch(`${API}/api/videos/${id}/toggle`, { method: 'PUT' })
+        .then(r => r.json()).then(d => {
+            if (d.success) {
+                toast('تم تغيير حالة المحاضرة بنجاح', 'success');
+                loadAll();
+            }
+        });
+};
+
+// حذف المحاضرة
+window.confirmDeleteVideo = function(id, title) {
+    showModal('حذف المحاضرة', `هل تريد حذف المحاضرة "${title}" نهائياً من المنصة؟`, () => {
+        fetch(`${API}/api/videos/${id}`, { method: 'DELETE' })
+            .then(r => r.json()).then(d => {
+                if (d.success) {
+                    toast('تم حذف المحاضرة بنجاح', 'success');
+                    loadAll();
+                }
+            });
+    });
+};
+
+// فتح مودال التعديل وملء البيانات الحالية للمحاضرة
+window.openEditVideoModal = function(id) {
+    const video = _videos.find(v => v._id === id);
+    if (!video) return;
+    document.getElementById('edit-video-id').value = video._id;
+    document.getElementById('edit-video-title').value = video.title;
+    document.getElementById('edit-video-price').value = video.price;
+    document.getElementById('edit-video-link').value = video.link || "";
+    document.getElementById('editVideoModal').classList.add('open');
+};
+
+window.closeEditModal = function() {
+    document.getElementById('editVideoModal').classList.remove('open');
+};
+
+// حفظ بيانات التعديل
+window.handleSaveEditVideo = function(event) {
+    event.preventDefault();
+    const id = document.getElementById('edit-video-id').value;
+    const title = document.getElementById('edit-video-title').value;
+    const price = document.getElementById('edit-video-price').value;
+    const link = document.getElementById('edit-video-link').value;
+
+    fetch(`${API}/api/videos/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title, price, link })
+    }).then(r => r.json()).then(d => {
+        if (d.success) {
+            toast('تم تعديل بيانات المحاضرة بنجاح', 'success');
+            closeEditModal();
+            loadAll();
+        }
+    });
+};
+
+function populateTeacherSelectAdmin() {
+    const sel = document.querySelector('#section-add-video select[name="teacherId"]');
+    if (!sel) return;
+    sel.innerHTML = '<option value="">-- اختر معلماً --</option>';
+    _teachers.forEach(t => {
+        sel.innerHTML += `<option value="${t._id}">${t.name}</option>`;
+    });
+}
+
+// ===== SIDEBAR STATS =====
+function updateSidebarStats() {
+    const activated = _codes.filter(c => c.used || c.views > 0).length;
+    document.getElementById('sb-users').textContent = _users.length;
+    document.getElementById('sb-codes').textContent = _codes.length;
+    document.getElementById('sb-videos').textContent = _videos.length;
+    document.getElementById('sb-teachers').textContent = _teachers.length;
+    document.getElementById('kpi-users').textContent = _users.length;
+    document.getElementById('kpi-codes').textContent = _codes.length;
+    document.getElementById('kpi-videos').textContent = _videos.length;
+    document.getElementById('kpi-teachers').textContent = _teachers.length;
+    document.getElementById('nav-users-count').textContent = _users.length;
+    document.getElementById('nav-codes-count').textContent = _codes.length;
+    const pct = _codes.length ? Math.round(activated / _codes.length * 100) : 0;
+    document.getElementById('kpi-codes-sub').innerHTML = `<i class="ti ti-trending-up"></i> ${activated} مفعّل (${pct}%)`;
+}
+
+// ===== OVERVIEW TABLE =====
+function renderOverviewTable() {
+    const tb = document.getElementById('overview-users-table');
+    const recent = [..._users].slice(-5).reverse();
+    if (!recent.length) {
+        tb.innerHTML = '<tr><td colspan="4" style="text-align:center; padding:30px; color:var(--txt3)">لا يوجد طلاب مسجلون</td></tr>';
+        return;
+    }
+    tb.innerHTML = recent.map(u => `
+        <tr>
+            <td><div style="display:flex;align-items:center;gap:10px">
+                <div class="avatar-circle">${(u.firstName||'؟')[0]}</div>
+                <span>${u.firstName||''} ${u.lastName||''}</span>
+            </div></td>
+            <td style="direction:ltr">${u.phone||'—'}</td>
+            <td><span class="badge badge-blue">${u.grade||'—'}</span></td>
+            <td>${u.governorate||'—'}</td>
+        </tr>
+    `).join('');
+}
+
+// ===== USERS TABLE =====
+function renderUsersTable() {
+    document.getElementById('users-count-label').textContent = `${_users.length} طالب مسجل`;
+    filterUsers(_userFilter);
+}
+
+function filterUsers(q) {
+    _userFilter = q;
+    applyUserFilters();
+}
+
+function filterUsersByGrade(g) {
+    _gradeFilter = g;
+    applyUserFilters();
+}
+
+function applyUserFilters() {
+    const tb = document.getElementById('users-table-body');
+    let list = [..._users];
+    if (_gradeFilter) list = list.filter(u => u.grade === _gradeFilter);
+    if (_userFilter) {
+        const q = _userFilter.toLowerCase();
+        list = list.filter(u =>
+            (u.firstName + ' ' + u.lastName).toLowerCase().includes(q) ||
+            (u.phone||'').includes(q)
+        );
+    }
+    if (!list.length) {
+        tb.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:40px;color:var(--txt3)">لا توجد نتائج</td></tr>';
+        return;
+    }
+    tb.innerHTML = list.map(u => `
+        <tr>
+            <td><div style="display:flex;align-items:center;gap:10px">
+                <div class="avatar-circle">${(u.firstName||'؟')[0]}</div>
+                <div>
+                    <div style="font-weight:600;color:var(--txt)">${u.firstName||''} ${u.lastName||''}</div>
+                    <div style="font-size:11px;color:var(--txt3)">${u.username||''}</div>
+                </div>
+            </div></td>
+            <td style="direction:ltr;font-family:monospace">${u.phone||'—'}</td>
+            <td><span class="badge badge-blue">${u.grade||'—'}</span></td>
+            <td>${u.governorate||'—'}</td>
+            <td>${u.section||'—'}</td>
+            <td><div class="action-btns">
+                <button class="action-btn danger" onclick="confirmDeleteUser('${u._id}','${u.firstName}')" title="حذف"><i class="ti ti-trash"></i></button>
+            </div></td>
+        </tr>
+    `).join('');
+}
+
+function confirmDeleteUser(id, name) {
+    showModal('حذف الطالب', `هل تريد حذف الطالب "${name}"؟ لا يمكن التراجع.`, () => {
+        fetch(`${API}/api/users/${id}`, { method: 'DELETE' })
+            .then(r => r.json()).then(d => {
+                if (d.success) { toast('تم حذف الطالب', 'success'); loadAll(); }
+                else toast('فشل الحذف: ' + d.message, 'error');
+            }).catch(() => toast('خطأ في الاتصال', 'error'));
+    });
+}
+
+// ===== CODES =====
+function switchCodeTab(tab, btn) {
+    _activeCodeTab = tab;
+    document.querySelectorAll('.code-tab').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.codes-panel').forEach(p => p.classList.remove('active'));
+    document.getElementById(`codes-panel-${tab}`).classList.add('active');
+}
+
+function renderCodesPanels() {
+    const activated = _codes.filter(c => c.used || c.views > 0);
+    const notActivated = _codes.filter(c => !(c.used || c.views > 0));
+    document.getElementById('codes-count-label').textContent = `${_codes.length} كود | ${activated.length} مفعّل | ${notActivated.length} غير مفعّل`;
+
+    renderCodesPanel('codes-panel-active', activated);
+    renderCodesPanel('codes-panel-inactive', notActivated);
+    renderCodesPanel('codes-panel-all', _codes);
+}
+
+function renderCodesPanel(id, list) {
+    const el = document.getElementById(id);
+    if (!list.length) {
+        el.innerHTML = '<div class="empty-state"><i class="ti ti-ticket-off"></i><p>لا توجد أكواد في هذه القائمة</p></div>';
+        return;
+    }
+    el.innerHTML = list.map(c => {
+        const views = c.views || 0;
+        const pips = [0,1,2].map(i => `<div class="pip ${i < views ? 'filled' : ''}"></div>`).join('');
+        const isUsed = c.used || views > 0;
+        return `<div class="code-row">
+            <div class="code-mono">${c.code}</div>
+            <div style="flex:1">
+                <div style="font-size:12px;color:var(--txt2)">${c.videoTitle||'—'}</div>
+                <div style="font-size:11px;color:var(--txt3);margin-top:2px">${c.value||0} جنيه</div>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:4px">
+                <div class="view-pips">${pips}</div>
+                <div style="font-size:10px;color:var(--txt3)">${views}/3 مشاهدات</div>
+            </div>
+            <span class="badge ${isUsed ? 'badge-green' : 'badge-gray'}">${isUsed ? 'مفعّل' : 'جديد'}</span>
+            <div class="action-btns">
+                <button class="action-btn" onclick="toggleCode('${c._id}')" title="${isUsed ? 'إلغاء التفعيل' : 'تفعيل'}">
+                    <i class="ti ${isUsed ? 'ti-toggle-right' : 'ti-toggle-left'}"></i>
+                </button>
+                <button class="action-btn danger" onclick="confirmDeleteCode('${c._id}','${c.code}')" title="حذف">
+                    <i class="ti ti-trash"></i>
+                </button>
+            </div>
+        </div>`;
+    }).join('');
+}
+
+function toggleCode(id) {
+    const code = _codes.find(c => c._id === id);
+    if (!code) return;
+    fetch(`${API}/api/codes/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ used: !code.used })
+    }).then(r => r.json()).then(d => {
+        if (d.success) { loadAll(); toast('تم تحديث حالة الكود', 'success'); }
+    });
+}
+
+function confirmDeleteCode(id, code) {
+    showModal('حذف الكود', `هل تريد حذف الكود "${code}"؟`, () => {
+        fetch(`${API}/api/codes/${id}`, { method: 'DELETE' })
+            .then(r => r.json()).then(d => {
+                if (d.success) { toast('تم حذف الكود', 'success'); loadAll(); }
+            });
+    });
+}
+
+function confirmClearCodes() {
+    showModal('مسح جميع الأكواد', `سيتم حذف جميع الأكواد (${_codes.length} كود). لا يمكن التراجع!`, () => {
+        fetch(`${API}/api/codes`, { method: 'DELETE' })
+            .then(r => r.json()).then(d => {
+                if (d.success) { toast('تم مسح جميع الأكواد', 'success'); loadAll(); }
+            });
+    });
+}
+
+// ===== TEACHERS =====
+function renderTeachersAdmin() {
+    const el = document.getElementById('teachers-list-admin');
+    document.getElementById('teachers-count-label').textContent = `${_teachers.length} معلم مضاف`;
+    if (!_teachers.length) {
+        el.innerHTML = '<div class="empty-state"><i class="ti ti-user-x"></i><p>لا يوجد معلمون مضافون</p></div>';
+        return;
+    }
+    el.innerHTML = _teachers.map(t => {
+        const initials = (t.name||'م').split(' ').map(w => w[0]).slice(0,2).join('');
+        const grades = (t.grades||[]).map(g => `<span class="teacher-grade-tag">${g.replace('الصف ','')}</span>`).join('');
+        return `<div class="teacher-row">
+            <div class="teacher-avatar-placeholder">${initials}</div>
+            <div class="teacher-info">
+                <div class="teacher-name-text">${t.name}</div>
+                <div class="teacher-meta">${t.subjectAr||''} · ${t.bio||''}</div>
+                <div class="teacher-grades" style="margin-top:6px">${grades}</div>
+            </div>
+            <button class="action-btn danger" onclick="confirmDeleteTeacher('${t._id}','${t.name}')" title="حذف"><i class="ti ti-trash"></i></button>
+        </div>`;
+    }).join('');
+}
+
+function handleAdminAddTeacher(event) {
+    event.preventDefault();
+    const name = document.getElementById('teacher-name').value;
+    const subjectAr = document.getElementById('teacher-subject').value;
+    const bio = document.getElementById('teacher-bio').value;
+    const checkedBoxes = document.querySelectorAll('#teacher-grades-pills input[name="teacher-grades-check"]:checked');
+    const grades = Array.from(checkedBoxes).map(cb => cb.value);
+    if (!grades.length) { toast('يرجى اختيار صف دراسي واحد على الأقل', 'error'); return; }
+    const imageFile = document.getElementById('teacher-image').files[0];
+    const formData = new FormData();
+    formData.append('name', name);
+    formData.append('subjectAr', subjectAr);
+    formData.append('bio', bio);
+    grades.forEach(g => formData.append('grades', g));
+    if (imageFile) formData.append('image', imageFile);
+    fetch(`${API}/api/teachers`, { method: 'POST', body: formData })
+        .then(r => r.json()).then(d => {
+            if (d.success) { toast('تم إضافة المعلم بنجاح', 'success'); event.target.reset(); resetPills('teacher-grades-pills'); loadAll(); }
+            else toast('خطأ: ' + (d.message||''), 'error');
+        }).catch(() => toast('خطأ في الاتصال بالسيرفر', 'error'));
+}
+
+function confirmDeleteTeacher(id, name) {
+    showModal('حذف المعلم', `هل تريد حذف المعلم "${name}"؟`, () => {
+        fetch(`${API}/api/teachers/${id}`, { method: 'DELETE' })
+            .then(r => r.json()).then(d => {
+                if (d.success) { toast('تم حذف المعلم', 'success'); loadAll(); }
+            });
+    });
+}
+
+// ===== ADD VIDEO =====
+function handleAdminAddVideo(event) {
+    event.preventDefault();
+    const form = event.target;
+    const title = form.querySelector('input[name="title"]').value;
+    const link = form.querySelector('input[name="link"]').value;
+    const price = form.querySelector('input[name="price"]').value;
+    const imageFile = form.querySelector('input[name="image"]').files[0];
+    const videoFile = form.querySelector('input[name="video"]').files[0];
+    const teacherId = form.querySelector('select[name="teacherId"]').value;
+    const checkedGrades = [...form.querySelectorAll('input[name="video-grades-check"]:checked')].map(cb => cb.value);
+    
+    if (!imageFile) { toast('يرجى اختيار صورة للفيديو', 'error'); return; }
+    if (!checkedGrades.length) { toast('يرجى اختيار صف دراسي واحد على الأقل', 'error'); return; }
+    if (!teacherId) { toast('يرجى اختيار معلم لهذه المحاضرة', 'error'); return; }
+
+    const formData = new FormData();
+    formData.append('title', title);
+    formData.append('link', link);
+    formData.append('price', parseInt(price));
+    formData.append('teacherId', teacherId);
+    formData.append('image', imageFile);
+    if (videoFile) formData.append('video', videoFile);
+    checkedGrades.forEach(g => formData.append('grades', g));
+
+    toast('جاري رفع الفيديو...', 'info');
+    
+    fetch(`${API}/api/videos`, { method: 'POST', body: formData })
+        .then(r => {
+            if (!r.ok) {
+                throw new Error(`خطأ سيرفر بكود: ${r.status}`);
+            }
+            return r.json();
+        })
+        .then(d => {
+            if (d.success) { 
+                toast('تم رفع الفيديو بنجاح!', 'success'); 
+                form.reset(); 
+                resetPills('video-grades-pills'); 
+                loadAll(); 
+            } else { 
+                toast('فشل الرفع: ' + d.message, 'error'); 
+                console.error("تفاصيل خطأ السيرفر:", d);
+            }
+        })
+        .catch(err => {
+            toast('خطأ في رفع الفيديو. راجع كونسول المتصفح (F12) والسيرفر', 'error'); 
+            console.error("تفاصيل الخطأ البرمي:", err);
+        });
+}
+
+// ===== GENERATE CODES =====
+function populateVideoSelectAdmin() {
+    const sel = document.querySelector('#section-generate-codes select[name="videoSelect"]');
+    if (!sel) return;
+    sel.innerHTML = '<option value="">-- اختر فيديو --</option>';
+    _videos.forEach(v => { sel.innerHTML += `<option value="${v._id}">${v.title}</option>`; });
+}
+
+function setPrice(videoId) {
+    const video = _videos.find(v => v._id === videoId);
+    if (video) document.getElementById('code-price').value = video.price;
+}
+
+function handleGenerateCodes(event) {
+    event.preventDefault();
+    const form = event.target;
+    const videoId = form.querySelector('select[name="videoSelect"]').value;
+    const count = parseInt(form.querySelector('input[name="count"]').value);
+    const value = parseInt(form.querySelector('input[name="price"]').value);
+    if (!videoId) { toast('يرجى اختيار فيديو', 'error'); return; }
+    const video = _videos.find(v => v._id === videoId);
+    const videoTitle = video ? video.title : 'فيديو';
+    toast(`جاري توليد ${count} كود...`, 'info');
+    fetch(`${API}/api/codes/generate`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ videoId, videoTitle, count, value })
+    }).then(r => r.json()).then(d => {
+        if (d.success) {
+            _lastGenCodes = d.codes;
+            toast(`تم توليد ${d.codes.length} كود بنجاح!`, 'success');
+            showGenResult(d.codes);
+            exportCodesCSV(d.codes);
+            loadAll();
+        } else toast('خطأ: ' + d.message, 'error');
+    }).catch(() => toast('خطأ في الاتصال', 'error'));
+}
+
+function showGenResult(codes) {
+    const el = document.getElementById('gen-result');
+    el.style.display = 'block';
+    document.getElementById('gen-count').textContent = codes.length;
+    document.getElementById('gen-codes-display').innerHTML = codes.map(c =>
+        `<div class="gen-code-chip">${c.code}</div>`
+    ).join('');
+}
+
+function copyAllCodes() {
+    const text = _lastGenCodes.map(c => c.code).join('\n');
+    navigator.clipboard.writeText(text).then(() => toast('تم نسخ الأكواد', 'success'));
+}
+
+function exportCodesCSV(codes) {
+    let csv = '\uFEFFالكود,القيمة,الفيديو\n';
+    codes.forEach(c => { csv += `${c.code},${c.value},"${c.videoTitle}"\n`; });
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `codes_${Date.now()}.csv`;
+    a.click();
+}
+
+// ===== THEME SWITCHER =====
+function toggleAdminTheme() {
+    const isLight = document.body.classList.contains('light-mode');
+    const newTheme = isLight ? 'dark' : 'light';
+    applyAdminTheme(newTheme);
+}
+
+function applyAdminTheme(theme) {
+    document.body.classList.toggle('light-mode', theme === 'light');
+    localStorage.setItem('adminTheme', theme);
+}
+
+function getAdminTheme() {
+    const saved = localStorage.getItem('adminTheme');
+    if (saved === 'dark' || saved === 'light') return saved;
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+}
+
+// ===== INIT =====
+document.addEventListener('DOMContentLoaded', function() {
+    applyAdminTheme(getAdminTheme());
+    loadAll();
+}, { once: true });
+</script>
 </body>
 </html>

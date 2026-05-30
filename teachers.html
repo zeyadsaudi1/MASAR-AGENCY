@@ -1,60 +1,184 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
-    <title>جميع المعلمين - منصة الأستاذ التعليمية</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>صفحة المعلم | مَسار</title>
 </head>
-<body class="teachers-page">
+<body class="royal-dashboard">
+
+    <!-- النافبار الموحد النحيف العائم -->
     <header>
         <div class="header-inner">
             <div class="header-left">
                 <div class="logo">
                     <span class="logo-mark">
-                        <img class="logo-dark" src="imges/logo.png" alt="MASAR-مَســـار logo dark">
-                        <img class="logo-light" src="imges/logo2.png" alt="MASAR-مَســـار logo light">
+                        <img class="logo-dark" src="imges/logo.png" alt="MASAR Logo">
+                        <img class="logo-light" src="imges/logo2.png" alt="MASAR Logo">
                     </span>
                     <span>MASAR-مَســـار</span>
                 </div>
                 <div class="header-icons">
-                    <button class="icon-btn theme-switcher" data-theme="light" aria-label="وضع النهار">☀</button>
-                    <button class="icon-btn theme-switcher" data-theme="dark" aria-label="وضع الظلام">🌙</button>
+                    <button class="icon-btn theme-switcher" data-theme="light">☀</button>
+                    <button class="icon-btn theme-switcher" data-theme="dark">🌙</button>
                 </div>
             </div>
-           <nav class="header-actions" id="authActions">
-    <!-- سيتم تبديل هذا المحتوى بواسطة JavaScript -->
-    <a href="login.html" class="btn-outline">تسجيل الدخول</a>
-    <a href="register.html" class="btn-fill">حساب جديد</a>
-</nav>
-
-<!-- إضافة قائمة المستخدم (تكون مخفية افتراضياً) -->
-<div class="user-dropdown-container" id="userDropdownArea" style="display: none;">
-    <button class="user-menu-btn" onclick="toggleUserMenu()">
-        <span id="navUserName">الطالب</span>
-        <div class="user-icon-circle">👤</div>
-    </button>
-    
-    <div class="user-dropdown-menu" id="userMenu">
-        <a href="profile.html" class="menu-item">👤 البروفايل</a>
-        <div class="menu-item balance-item">
-            <span>💰 الرصيد (النقط):</span>
-            <span id="userPoints">0</span> ج.م
-        </div>
-        <hr>
-        <button onclick="handleLogout()" class="menu-item logout-btn">🚪 تسجيل خروج</button>
-    </div>
-</div>
+            <div class="header-center">
+                <a href="index.html" class="nav-link-item">الرئيسية</a>
+                <a href="index.html#teachersGrid" class="nav-link-item active">المعلمين</a>
+                <a href="index.html#subjectsWrapper" class="nav-link-item">المواد الدراسية</a>
+                <a href="index.html#latest-videos-section" class="nav-link-item">الكورسات</a>
+            </div>
+            <nav class="header-actions" id="authActions">
+                <a href="index.html" class="btn-outline">الرئيسية</a>
+                <button onclick="handleLogout()" class="btn-fill">خروج</button>
+            </nav>
         </div>
     </header>
 
-    <section class="teachers-section">
-        <div class="section-container">
-            <h2 class="section-title">جميع المعلمين</h2>
-            <p class="section-subtitle"> كل المعلمين المتاحين في المنصة</p>
-            <div class="teachers-grid" id="teachersGrid"></div>
-        </div>
-    </section>
+    <div class="royal-wrapper">
+        <!-- كارت تفاصيل المعلم -->
+        <aside class="royal-sidebar" style="text-align: center;">
+            <div class="avatar-container" style="width: 140px; height: 140px; margin-bottom: 20px;">
+                <img src="" id="teacherAvatar" class="sidebar-avatar" style="width: 100%; height: 100%; border-radius: 50%;">
+            </div>
+            <h2 id="teacherName" style="font-size: 1.5rem; font-weight: 800; margin-bottom: 5px;">-</h2>
+            <p id="teacherSubject" style="color: var(--primary-red); font-weight: 700; margin-bottom: 15px;">-</p>
+            <p id="teacherBio" style="color: var(--gray); font-size: 0.95rem; line-height: 1.6;">-</p>
+            <button id="followBtn" onclick="toggleFollow()" class="btn-royal-action" style="margin-top: 15px; width: 100%;">متابعة</button>
+        </aside>
+
+        <!-- منطقة الفيديوهات الخاصة بالمعلم للمرحلة الدراسية للطالب -->
+        <main class="royal-content">
+            <div class="glass-section-title">
+                <h3><i class="fas fa-graduation-cap"></i> المحاضرات المتاحة لك مع هذا المعلم</h3>
+            </div>
+            
+            <!-- شبكة عرض الفيديوهات المفلترة -->
+            <div class="video-grid" id="teacherVideos" style="display: flex; flex-wrap: wrap; gap: 20px; padding: 0;">
+                <p style="color: var(--gray); text-align: center; width: 100%;">جاري تحميل المحاضرات المخصصة لمرحلتك...</p>
+            </div>
+        </main>
+    </div>
 
     <script src="script.js" defer></script>
+    <script>
+       document.addEventListener('DOMContentLoaded', async () => {
+    const API_URL = window.location.origin;
+    const urlParams = new URLSearchParams(window.location.search);
+    const teacherId = urlParams.get('teacherId');
+    
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    const studentGrade = currentUser ? currentUser.grade : null;
+
+    let isFollowing = false;
+
+    if (!teacherId) {
+        alert('لم يتم العثور على المعلم المختار');
+        window.location.href = 'index.html';
+        return;
+    }
+
+    // تحديث شكل زر المتابعة بناءً على حالة الطالب الحالية
+    if (currentUser) {
+        isFollowing = (currentUser.followedTeachers || []).includes(teacherId);
+        updateFollowButton();
+    }
+
+    function updateFollowButton() {
+        const btn = document.getElementById('followBtn');
+        if (!btn) return;
+        if (isFollowing) {
+            btn.textContent = 'إلغاء المتابعة';
+            btn.style.background = '#e63946'; // أحمر للإلغاء
+            btn.style.color = '#fff';
+        } else {
+            btn.textContent = 'متابعة المعلم';
+            btn.style.background = 'var(--primary-red)';
+            btn.style.color = '#13201c';
+        }
+    }
+
+    // دالة الضغط على متابعة
+    window.toggleFollow = async function() {
+        if (!currentUser) { alert('يجب تسجيل الدخول أولاً لمتابعة المعلم'); window.location.href = 'login.html'; return; }
+        try {
+            const res = await fetch(`${API_URL}/api/users/${currentUser._id}/follow`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ teacherId })
+            });
+            const data = await res.json();
+            if (data.success) {
+                isFollowing = data.isFollowing;
+                currentUser.followedTeachers = data.followedTeachers;
+                localStorage.setItem('currentUser', JSON.stringify(currentUser)); // تحديث الميموري المحلي للطالب
+                updateFollowButton();
+            }
+        } catch (err) {
+            console.error(err);
+        }
+    };
+
+    try {
+        // 1. جلب بيانات المعلم
+        const teacherRes = await fetch(`${API_URL}/api/teachers`);
+        const teachers = await teacherRes.json();
+        const teacher = teachers.find(t => t._id === teacherId);
+
+        if (!teacher) {
+            alert('المعلم غير موجود');
+            window.location.href = 'index.html';
+            return;
+        }
+
+        document.getElementById('teacherAvatar').src = teacher.imagePath || 'imges/1.png';
+        document.getElementById('teacherName').textContent = teacher.name;
+        document.getElementById('teacherSubject').textContent = teacher.subjectAr;
+        document.getElementById('teacherBio').textContent = teacher.bio;
+
+        // 2. جلب المحاضرات وفلترتها
+        const videoRes = await fetch(`${API_URL}/api/videos`);
+        const allVideos = await videoRes.json();
+
+        const filteredVideos = allVideos.filter(video => {
+            const matchTeacher = video.teacherId === teacherId;
+            const matchGrade = !studentGrade || !video.grades || video.grades.length === 0 || video.grades.includes(studentGrade);
+            return matchTeacher && matchGrade;
+        });
+
+        const container = document.getElementById('teacherVideos');
+        if (filteredVideos.length === 0) {
+            container.innerHTML = `<p style="color: var(--gray); text-align: center; width: 100%; padding: 40px 0;">لا توجد محاضرات متاحة لمرحلتك الدراسية (${studentGrade || 'عام'}) مع هذا المعلم حالياً.</p>`;
+            return;
+        }
+
+        container.innerHTML = filteredVideos.map(video => {
+            const isSubscribed = currentUser && (currentUser.subscribedVideos || []).includes(video._id);
+            const actionButtonHTML = isSubscribed
+                ? `<button class="btn-join" onclick="watchVideo('${video._id}')" style="width:100%;">مشاهدة المحاضرة !</button>`
+                : `<button class="btn-enter" onclick="subscribeVideo('${video._id}')" style="width:100%;">اشترك الآن 💰</button>`;
+
+            return `
+                <div class="course-card" style="flex: 0 0 320px; box-sizing: border-box;">
+                    <img src="${video.imagePath || 'imges/st.jpg'}" class="course-thumb" alt="${video.title}">
+                    <div class="course-body">
+                        <h3 class="course-title">${video.title}</h3>
+                        <div class="course-price">${video.price || 0} ج.م</div>
+                        <div class="course-btns">
+                            ${actionButtonHTML}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }).join('');
+
+    } catch (err) {
+        console.error(err);
+    }
+});
+    </script>
 </body>
 </html>
